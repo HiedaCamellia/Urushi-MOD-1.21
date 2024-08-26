@@ -1,5 +1,6 @@
 package com.iwaliner.urushi.common.blockentity.menu;
 
+import com.iwaliner.urushi.core.recipe.SimpleInput;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.common.blockentity.slot.FryerFuelSlot;
 import com.iwaliner.urushi.core.recipe.FryingRecipe;
@@ -15,7 +16,9 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-public abstract class AbstractFryerMenu extends RecipeBookMenu<Container> {
+import java.util.List;
+
+public abstract class AbstractFryerMenu extends RecipeBookMenu<SimpleInput,FryingRecipe> {
     public static final int INGREDIENT_SLOT = 0;
     public static final int FUEL_SLOT = 1;
     public static final int RESULT_SLOT = 2;
@@ -74,7 +77,7 @@ public abstract class AbstractFryerMenu extends RecipeBookMenu<Container> {
     }
 
     public boolean recipeMatches(Recipe<? super RecipeInput> p_38980_) {
-        return p_38980_.matches(this.container, this.level);
+        return p_38980_.matches(new SimpleInput(List.of(this.getSlot(0).getItem())), this.level);
     }
 
     public int getResultSlotIndex() {
@@ -145,8 +148,8 @@ public abstract class AbstractFryerMenu extends RecipeBookMenu<Container> {
         return itemstack;
     }
 
-    protected boolean canSmelt(ItemStack p_38978_) {
-        return this.level.getRecipeManager().getRecipeFor((RecipeType<FryingRecipe>)this.recipeType, new SimpleContainer(p_38978_), this.level).isPresent();
+    protected boolean canSmelt(ItemStack input) {
+        return this.level.getRecipeManager().getRecipeFor((RecipeType<FryingRecipe>)this.recipeType, new SimpleInput(List.of(input)), this.level).isPresent();
     }
 
     protected boolean isFuel(ItemStack itemStack) {

@@ -1,10 +1,10 @@
 package com.iwaliner.urushi.common.world.dimension;
 
+import com.iwaliner.urushi.block.KakuriyoPortalBlock;
 import com.iwaliner.urushi.registries.DimensionRegister;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.ModCoreUrushi;
 import com.iwaliner.urushi.registries.TagUrushi;
-import com.iwaliner.urushi.common.block.KakuriyoPortalBlock;
 import com.iwaliner.urushi.common.block.KasugaLanternBlock;
 import com.iwaliner.urushi.common.block.ParapetBlock;
 import com.iwaliner.urushi.common.block.SimpleShapedBlock;

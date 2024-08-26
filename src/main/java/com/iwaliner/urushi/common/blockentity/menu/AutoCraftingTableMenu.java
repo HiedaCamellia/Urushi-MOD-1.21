@@ -9,9 +9,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.*;
 
-public class AutoCraftingTableMenu extends RecipeBookMenu<Container> {
+public class AutoCraftingTableMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
 
     private final Container container;
     private final Player player;
@@ -63,12 +63,17 @@ public class AutoCraftingTableMenu extends RecipeBookMenu<Container> {
         this.container.clearContent();
     }
 
-    public boolean recipeMatches(Recipe<? super Container> recipe) {
+    @Override
+    public boolean recipeMatches(RecipeHolder<CraftingRecipe> recipeHolder) {
+        return recipeHolder.value().matches(new TransientCraftingContainer(this,3,3).asCraftInput(), this.player.level());
+    }
+
+    public boolean recipeMatches(Recipe<? super RecipeInput> recipe) {
         CraftingContainer craftingcontainer = new TransientCraftingContainer(this,3,3);
         for (int i = 0; i < 9; i++) {
             craftingcontainer.setItem(i, container.getItem(i+1));
         }
-        return recipe.matches(craftingcontainer, this.player.level());
+        return recipe.matches(craftingcontainer.asCraftInput(), this.player.level());
     }
 
     public int getResultSlotIndex() {

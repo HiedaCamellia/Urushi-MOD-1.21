@@ -1,7 +1,8 @@
 package com.iwaliner.urushi.common.item;
 
 import com.iwaliner.urushi.core.util.UrushiUtils;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.Holder;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.network.chat.Component;
@@ -16,12 +17,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraftforge.common.extensions.IForgeItem;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class WearableItem extends Item implements Equipable, IForgeItem {
+public class WearableItem extends Item implements Equipable {
     private final String string;
     public static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DefaultDispenseItemBehavior() {
         protected ItemStack execute(BlockSource p_40408_, ItemStack p_40409_) {
@@ -56,7 +56,7 @@ public class WearableItem extends Item implements Equipable, IForgeItem {
     }
 
     @Nullable
-    public SoundEvent getEquipSound() {
+    public Holder<SoundEvent> getEquipSound() {
         return SoundEvents.ARMOR_EQUIP_LEATHER;
     }
 
@@ -71,7 +71,7 @@ public class WearableItem extends Item implements Equipable, IForgeItem {
         return true;
     }
     @Override
-    public void appendHoverText(ItemStack p_41421_, @org.jetbrains.annotations.Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
-        UrushiUtils.setInfo(list,string);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        UrushiUtils.setInfo(tooltipComponents,string);
     }
 }

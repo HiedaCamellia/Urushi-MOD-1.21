@@ -4,6 +4,7 @@ import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.common.block.FoxHopperBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -30,6 +31,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.VanillaInventoryCodeHooks;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -50,23 +52,24 @@ public class FoxHopperBlockEntity extends RandomizableContainerBlockEntity imple
         super(BlockEntityRegister.FoxHopperBlockEntity.get(), p_155550_, p_155551_);
     }
 
-    public void load(CompoundTag p_155588_) {
-        super.load(p_155588_);
+    @Override
+    public void loadAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(compound, lookupProvider);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(p_155588_)) {
-            ContainerHelper.loadAllItems(p_155588_, this.items);
+        if (!this.tryLoadLootTable(compound)) {
+            ContainerHelper.loadAllItems(compound, this.items, lookupProvider);
         }
 
-        this.cooldownTime = p_155588_.getInt("TransferCooldown");
+        this.cooldownTime = compound.getInt("TransferCooldown");
     }
 
-    protected void saveAdditional(CompoundTag p_187502_) {
-        super.saveAdditional(p_187502_);
-        if (!this.trySaveLootTable(p_187502_)) {
-            ContainerHelper.saveAllItems(p_187502_, this.items);
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(compound, lookupProvider);
+        if (!this.trySaveLootTable(compound)) {
+            ContainerHelper.saveAllItems(compound, this.items,lookupProvider);
         }
 
-        p_187502_.putInt("TransferCooldown", this.cooldownTime);
+        compound.putInt("TransferCooldown", this.cooldownTime);
     }
 
     public int getContainerSize() {
@@ -139,13 +142,13 @@ public class FoxHopperBlockEntity extends RandomizableContainerBlockEntity imple
         return true;
     }
 
-    private static Optional<Pair<IItemHandler, Object>> getItemHandler(Level level, Hopper hopper, Direction hopperFacing)
-    {
-        double x = hopper.getLevelX() + (double) hopperFacing.getStepX();
-        double y = hopper.getLevelY() + (double) hopperFacing.getStepY();
-        double z = hopper.getLevelZ() + (double) hopperFacing.getStepZ();
-        return VanillaInventoryCodeHooks.getItemHandler(level, x, y, z, hopperFacing.getOpposite());
-    }
+//    private static Optional<Pair<IItemHandler, Object>> getItemHandler(Level level, Hopper hopper, Direction hopperFacing)
+//    {
+//        double x = hopper.getLevelX() + (double) hopperFacing.getStepX();
+//        double y = hopper.getLevelY() + (double) hopperFacing.getStepY();
+//        double z = hopper.getLevelZ() + (double) hopperFacing.getStepZ();
+//        return VanillaInventoryCodeHooks.getItemHandler(level, x, y, z, hopperFacing.getOpposite());
+//    }
     private static boolean isFull(IItemHandler itemHandler)
     {
         for (int slot = 0; slot < itemHandler.getSlots(); slot++)
@@ -193,7 +196,8 @@ public class FoxHopperBlockEntity extends RandomizableContainerBlockEntity imple
                 stack = ItemStack.EMPTY;
                 insertedItem = true;
             }
-            else if (ItemHandlerHelper.canItemStacksStack(itemstack, stack))
+//            else if (ItemHandlerHelper.canItemStacksStack(itemstack, stack))
+            else if(true)
             {
                 int originalSize = stack.getCount();
                 stack = destInventory.insertItem(slot, stack, false);
@@ -227,37 +231,38 @@ public class FoxHopperBlockEntity extends RandomizableContainerBlockEntity imple
     public static boolean insertHook(FoxHopperBlockEntity hopper)
     {
         Direction hopperFacing = hopper.getBlockState().getValue(FoxHopperBlock.FACING);
-        return getItemHandler(hopper.getLevel(), hopper, hopperFacing)
-                .map(destinationResult -> {
-                    IItemHandler itemHandler = destinationResult.getKey();
-                    Object destination = destinationResult.getValue();
-                    if (isFull(itemHandler))
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < hopper.getContainerSize(); ++i)
-                        {
-                            if (!hopper.getItem(i).isEmpty())
-                            {
-                                ItemStack originalSlotContents = hopper.getItem(i).copy();
-                                ItemStack insertStack = hopper.removeItem(i, 1);
-                                ItemStack remainder = putStackInInventoryAllSlots(hopper, destination, itemHandler, insertStack);
-
-                                if (remainder.isEmpty())
-                                {
-                                    return true;
-                                }
-
-                                hopper.setItem(i, originalSlotContents);
-                            }
-                        }
-
-                        return false;
-                    }
-                })
-                .orElse(false);
+        return false;
+//        return getItemHandler(hopper.getLevel(), hopper, hopperFacing)
+//                .map(destinationResult -> {
+//                    IItemHandler itemHandler = destinationResult.getKey();
+//                    Object destination = destinationResult.getValue();
+//                    if (isFull(itemHandler))
+//                    {
+//                        return false;
+//                    }
+//                    else
+//                    {
+//                        for (int i = 0; i < hopper.getContainerSize(); ++i)
+//                        {
+//                            if (!hopper.getItem(i).isEmpty())
+//                            {
+//                                ItemStack originalSlotContents = hopper.getItem(i).copy();
+//                                ItemStack insertStack = hopper.removeItem(i, 1);
+//                                ItemStack remainder = putStackInInventoryAllSlots(hopper, destination, itemHandler, insertStack);
+//
+//                                if (remainder.isEmpty())
+//                                {
+//                                    return true;
+//                                }
+//
+//                                hopper.setItem(i, originalSlotContents);
+//                            }
+//                        }
+//
+//                        return false;
+//                    }
+//                })
+//                .orElse(false);
     }
     private static boolean ejectItems(Level p_155563_, BlockPos p_155564_, BlockState p_155565_, FoxHopperBlockEntity p_155566_) {
         if (insertHook(p_155566_)) return true;
@@ -305,7 +310,7 @@ public class FoxHopperBlockEntity extends RandomizableContainerBlockEntity imple
     }
 
     public static boolean suckInItems(Level p_155553_, IFoxHopper p_155554_) {
-        Boolean ret = net.minecraftforge.items.VanillaInventoryCodeHooks.extractHook(p_155553_, p_155554_);
+        Boolean ret = VanillaInventoryCodeHooks.extractHook(p_155553_, p_155554_);
         Container container = getSourceContainer(p_155553_, p_155554_);
         if (container != null) {
             Direction direction = Direction.DOWN;
@@ -488,6 +493,11 @@ public class FoxHopperBlockEntity extends RandomizableContainerBlockEntity imple
 
     public double getLevelZ() {
         return (double)this.worldPosition.getZ() + 0.5D;
+    }
+
+    @Override
+    public boolean isGridAligned() {
+        return false;
     }
 
     public void setCooldown(int p_59396_) {

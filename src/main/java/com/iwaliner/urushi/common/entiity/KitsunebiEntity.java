@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
-import net.minecraftforge.network.NetworkHooks;
 
 public class KitsunebiEntity extends ThrowableItemProjectile implements ItemSupplier {
 

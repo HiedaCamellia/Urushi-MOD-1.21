@@ -1,17 +1,21 @@
 package com.iwaliner.urushi.common.blockentity;
 
 
+import com.iwaliner.urushi.ModCoreUrushi;
 import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.core.util.ElementType;
 import com.iwaliner.urushi.core.util.interfaces.ReiryokuExportable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
@@ -24,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
 
@@ -32,25 +37,34 @@ public  class HokoraBlockEntity extends AbstractReiryokuStorableBlockEntity impl
     private static final int[] SLOTS_FOR_UP = new int[]{0};
     public int coolTime;
     private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
+    private final SidedInvWrapper handler = new SidedInvWrapper(this, null);
 
+    public SidedInvWrapper getItemHandler() {
+        return handler;
+    }
     public HokoraBlockEntity(BlockPos p_155052_, BlockState p_155053_) {
         super(BlockEntityRegister.Hokora.get(),1000, p_155052_, p_155053_);
     }
-    public void load(CompoundTag compoundTag) {
-        super.load(compoundTag);
+
+    @Override
+    public void loadAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(compound, lookupProvider);
+        CompoundTag data = compound.getCompound(ModCoreUrushi.ModID);
         this.items.clear();
-        ContainerHelper.loadAllItems(compoundTag, this.items);
-        this.coolTime = compoundTag.getInt("coolTime");
+        ContainerHelper.loadAllItems(compound, this.items,lookupProvider);
+        this.coolTime = compound.getInt("coolTime");
     }
 
-    protected void saveAdditional(CompoundTag compoundTag) {
-        super.saveAdditional(compoundTag);
-       ContainerHelper.saveAllItems(compoundTag, this.items,true);
-        compoundTag.putInt("coolTime", this.coolTime);
+    @Override
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(compound, lookupProvider);
+        ContainerHelper.saveAllItems(compound, this.items,lookupProvider);
+        compound.putInt("coolTime", this.coolTime);
     }
-    public CompoundTag getUpdateTag() {
+
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
         CompoundTag compoundtag = new CompoundTag();
-        ContainerHelper.saveAllItems(compoundtag, this.items, true);
+        ContainerHelper.saveAllItems(compoundtag, this.items, lookupProvider);
         compoundtag.putInt("coolTime", this.coolTime);
         this.putBaseTag(compoundtag);
         return compoundtag;
@@ -246,17 +260,17 @@ public  class HokoraBlockEntity extends AbstractReiryokuStorableBlockEntity impl
             return SLOTS_FOR_UP;
 
     }
-    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] handlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
-    @Override
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if (!this.remove && facing != null && capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) {
-            if (facing == Direction.UP)
-                return handlers[0].cast();
-
-        }
-        return super.getCapability(capability, facing);
-    }
+//    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] handlers =
+//            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+//    @Override
+//    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
+//        if (!this.remove && facing != null && capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) {
+//            if (facing == Direction.UP)
+//                return handlers[0].cast();
+//
+//        }
+//        return super.getCapability(capability, facing);
+//    }
 
     @Override
     public void clearContent() {

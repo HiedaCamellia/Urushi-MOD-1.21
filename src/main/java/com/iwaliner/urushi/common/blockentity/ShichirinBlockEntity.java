@@ -10,7 +10,9 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 
@@ -27,24 +29,22 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public  class ShichirinBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, StackedContentsCompatible, RecipeHolder {
+public  class ShichirinBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, StackedContentsCompatible {
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
 
     public final RecipeType<? extends CampfireCookingRecipe> recipeType=RecipeType.CAMPFIRE_COOKING;
@@ -57,38 +57,45 @@ public  class ShichirinBlockEntity extends BaseContainerBlockEntity implements W
     private int differ;
     private final int iconAmount=ConfigUrushi.shichirinIconAmount.get();
     private NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
+    private final SidedInvWrapper handler = new SidedInvWrapper(this, null);
+
+    public SidedInvWrapper getItemHandler() {
+        return handler;
+    }
 
     public ShichirinBlockEntity(BlockPos p_155052_, BlockState p_155053_) {
         super(BlockEntityRegister.Shichirin.get(), p_155052_, p_155053_);
     }
-    public void load(CompoundTag p_155025_) {
-        super.load(p_155025_);
+    
+    @Override
+    public void loadAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(compound, lookupProvider);
         this.items.clear();
-        ContainerHelper.loadAllItems(p_155025_, this.items);
-        this.processingTime = p_155025_.getInt("processTime");
-        this.fire = p_155025_.getInt("fire");
-        this.differ = p_155025_.getInt("differ");
-        this.prePerfectFire = p_155025_.getInt("prePerfectFire");
-
-
+        ContainerHelper.loadAllItems(compound, this.items,lookupProvider);
+        this.processingTime = compound.getInt("processTime");
+        this.fire = compound.getInt("fire");
+        this.differ = compound.getInt("differ");
+        this.prePerfectFire = compound.getInt("prePerfectFire");
     }
 
-    protected void saveAdditional(CompoundTag p_187452_) {
-        super.saveAdditional(p_187452_);
-        p_187452_.putInt("processTime", this.processingTime);
-        p_187452_.putInt("fire", this.fire);
-        p_187452_.putInt("differ", this.differ);
-        p_187452_.putInt("prePerfectFire", this.prePerfectFire);
-        ContainerHelper.saveAllItems(p_187452_, this.items,true);
+    @Override
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(compound, lookupProvider);
+        compound.putInt("processTime", this.processingTime);
+        compound.putInt("fire", this.fire);
+        compound.putInt("differ", this.differ);
+        compound.putInt("prePerfectFire", this.prePerfectFire);
+        ContainerHelper.saveAllItems(compound, this.items,lookupProvider);
     }
-    public CompoundTag getUpdateTag() {
+
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
         CompoundTag compoundtag = new CompoundTag();
         compoundtag.putInt("processTime", this.processingTime);
         compoundtag.putInt("fire", this.fire);
         compoundtag.putInt("differ", this.differ);
         compoundtag.putInt("prePerfectFire", this.prePerfectFire);
 
-        ContainerHelper.saveAllItems(compoundtag, this.items, true);
+        ContainerHelper.saveAllItems(compoundtag, this.items, lookupProvider);
         return compoundtag;
     }
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -106,6 +113,11 @@ public  class ShichirinBlockEntity extends BaseContainerBlockEntity implements W
 
     protected Component getDefaultName() {
         return Component.translatable("container.shichirin");
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return items;
     }
 
 
@@ -194,7 +206,7 @@ public  class ShichirinBlockEntity extends BaseContainerBlockEntity implements W
 
     public static void tick(Level level, BlockPos pos, BlockState bs, ShichirinBlockEntity blockEntity) {
         if (!level.isClientSide) {
-            Recipe<?> recipe = level.getRecipeManager().getRecipeFor((RecipeType<CampfireCookingRecipe>) blockEntity.recipeType, blockEntity, level).orElse(null);
+            Recipe<?> recipe = level.getRecipeManager().getRecipeFor((RecipeType<CampfireCookingRecipe>) blockEntity.recipeType, new SingleRecipeInput(blockEntity.items.get(0)), level).orElse(null).value();
             AbstractCookingRecipe campfireCookingRecipe = (AbstractCookingRecipe) recipe;
             ItemStack slot0Stack = blockEntity.items.get(0);
             ItemStack slot1Stack = blockEntity.items.get(1);
@@ -231,12 +243,10 @@ public  class ShichirinBlockEntity extends BaseContainerBlockEntity implements W
                 }
                 if (blockEntity.processingTime >= blockEntity.getMaxProcessTime(campfireCookingRecipe) && blockEntity.canBurn(recipe, blockEntity.items, blockEntity.getMaxStackSize())) {
                     blockEntity.prePerfectFire=blockEntity.getPerfectFire(campfireCookingRecipe);
-                    ItemStack resultStack = ((Recipe<WorldlyContainer>) recipe).assemble(blockEntity,level.registryAccess());
+                    ItemStack resultStack = ((Recipe<SingleRecipeInput>) recipe).assemble(new SingleRecipeInput(slot0Stack),level.registryAccess());
                     resultStack.grow(slot0Stack.getCount() - 1);
-                    if (resultStack.getTag() == null) {
-                        resultStack.setTag(new CompoundTag());
-                    }
-                    CompoundTag tag = resultStack.getTag();
+
+                    CompoundTag tag = resultStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.of(new CompoundTag())).copyTag();
 
                     blockEntity.setCookingNBT(tag, blockEntity.differ);
                     blockEntity.items.set(0, resultStack.copy());
@@ -351,20 +361,20 @@ public  class ShichirinBlockEntity extends BaseContainerBlockEntity implements W
             return SLOTS_FOR_SIDES;
         }
     }
-    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] handlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
-    @Override
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if (!this.remove && facing != null && capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) {
-            if (facing == Direction.UP)
-                return handlers[0].cast();
-            else if (facing == Direction.DOWN)
-                return handlers[1].cast();
-            else
-                return handlers[2].cast();
-        }
-        return super.getCapability(capability, facing);
-    }
+//    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] handlers =
+//            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+//    @Override
+//    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
+//        if (!this.remove && facing != null && capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) {
+//            if (facing == Direction.UP)
+//                return handlers[0].cast();
+//            else if (facing == Direction.DOWN)
+//                return handlers[1].cast();
+//            else
+//                return handlers[2].cast();
+//        }
+//        return super.getCapability(capability, facing);
+//    }
 
     @Override
     public void clearContent() {
@@ -382,7 +392,7 @@ public  class ShichirinBlockEntity extends BaseContainerBlockEntity implements W
             return false;
         }else {
             if (!stacks.get(0).isEmpty() && recipe != null) {
-                ItemStack itemstack = ((Recipe<WorldlyContainer>) recipe).assemble(this,level.registryAccess());
+                ItemStack itemstack = ((Recipe<SingleRecipeInput>) recipe).assemble(new SingleRecipeInput(stacks.get(0)),level.registryAccess());
                 if (itemstack.isEmpty()) {
                     return false;
                 } else {
@@ -402,20 +412,20 @@ public  class ShichirinBlockEntity extends BaseContainerBlockEntity implements W
             }
         }
     }
+//
+//    @Override
+//    public void setRecipeUsed(@org.jetbrains.annotations.Nullable Recipe<?> recipe) {
+//        if (recipe != null) {
+////            ResourceLocation resourcelocation = recipe.getId();
+////            this.recipesUsed.addTo(resourcelocation, 1);
+//        }
+//    }
 
-    @Override
-    public void setRecipeUsed(@org.jetbrains.annotations.Nullable Recipe<?> recipe) {
-        if (recipe != null) {
-            ResourceLocation resourcelocation = recipe.getId();
-            this.recipesUsed.addTo(resourcelocation, 1);
-        }
-    }
-
-    @org.jetbrains.annotations.Nullable
-    @Override
-    public Recipe<?> getRecipeUsed() {
-        return (Recipe<?>) this.recipeType;
-    }
+//    @org.jetbrains.annotations.Nullable
+//    @Override
+//    public Recipe<?> getRecipeUsed() {
+//        return (Recipe<?>) this.recipeType;
+//    }
     private CompoundTag setCookingNBT(CompoundTag tag,int differ){
         ShichirinEnum enumType=getEnum();
         tag.putInt("cookingEnum", enumType.getID());

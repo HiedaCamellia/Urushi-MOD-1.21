@@ -16,7 +16,6 @@ import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -72,8 +71,9 @@ public class EmptyBambooCup extends Item {
         p_40653_.awardStat(Stats.ITEM_USED.get(this));
         return ItemUtils.createFilledResult(p_40652_, p_40653_, p_40654_);
     }
+
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
-        UrushiUtils.setInfo(list,"bamboo_cup");
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        UrushiUtils.setInfo(tooltipComponents,"bamboo_cup");
     }
 }

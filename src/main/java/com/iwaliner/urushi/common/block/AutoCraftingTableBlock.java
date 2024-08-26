@@ -4,6 +4,7 @@ import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.common.blockentity.AutoCraftingTableBlockEntity;
 import com.iwaliner.urushi.core.util.UrushiUtils;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -11,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -35,6 +37,12 @@ public class AutoCraftingTableBlock extends BaseEntityBlock {
         super(p_49795_);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.DOWN));
        }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getClickedFace());
     }
@@ -96,13 +104,12 @@ public class AutoCraftingTableBlock extends BaseEntityBlock {
         }
     }
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable BlockGetter getter, List<Component> list, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         if(stack.getItem().equals(ItemAndBlockRegister.advanced_auto_crafting_table.get())){
             UrushiUtils.setInfo(list, "advanced_auto_crafting_table");
         }
         UrushiUtils.setInfo(list, "auto_crafting_table");
         UrushiUtils.setInfo(list, "auto_crafting_table2");
-
     }
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {

@@ -20,7 +20,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -62,7 +61,7 @@ public class FilledBambooCup extends Item {
     }
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         Player player = entity instanceof Player ? (Player)entity : null;
-        if (!level.isClientSide&&stack.getItem().equals(ItemAndBlockRegister.milk_bamboo_cup.get())) {entity.curePotionEffects(new ItemStack(Items.MILK_BUCKET));}
+        if (!level.isClientSide&&stack.getItem().equals(ItemAndBlockRegister.milk_bamboo_cup.get())) {entity.removeAllEffects();}
         if (player instanceof ServerPlayer) {
             CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer)player, stack);
         }
@@ -100,8 +99,9 @@ public class FilledBambooCup extends Item {
     public InteractionResultHolder<ItemStack> use(Level p_42993_, Player p_42994_, InteractionHand p_42995_) {
         return ItemUtils.startUsingInstantly(p_42993_, p_42994_, p_42995_);
     }
+
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list,"filled_bamboo_cup");
         if(stack.getItem().equals(ItemAndBlockRegister.water_bamboo_cup.get())){
             UrushiUtils.setInfo(list,"water_bamboo_cup");

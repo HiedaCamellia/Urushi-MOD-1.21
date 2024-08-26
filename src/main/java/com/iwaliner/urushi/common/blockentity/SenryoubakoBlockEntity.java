@@ -4,6 +4,7 @@ import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.common.block.SenryoubakoBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
@@ -46,6 +48,12 @@ public class SenryoubakoBlockEntity extends RandomizableContainerBlockEntity imp
     private ShulkerBoxBlockEntity.AnimationStatus animationStatus = ShulkerBoxBlockEntity.AnimationStatus.CLOSED;
     private float progress;
     private float progressOld;
+
+    private final SidedInvWrapper handler = new SidedInvWrapper(this, null);
+
+    public SidedInvWrapper getItemHandler() {
+        return handler;
+    }
 
 
     public SenryoubakoBlockEntity(@Nullable DyeColor p_155666_, BlockPos p_155667_, BlockState p_155668_) {
@@ -160,23 +168,19 @@ public class SenryoubakoBlockEntity extends RandomizableContainerBlockEntity imp
         return Component.translatable("container.senryoubako");
     }
 
-    public void load(CompoundTag p_155678_) {
-        super.load(p_155678_);
-        this.loadFromTag(p_155678_);
-    }
-
-    protected void saveAdditional(CompoundTag p_187513_) {
-        super.saveAdditional(p_187513_);
-        if (!this.trySaveLootTable(p_187513_)) {
-            ContainerHelper.saveAllItems(p_187513_, this.itemStacks, false);
-        }
-
-    }
-
-    public void loadFromTag(CompoundTag p_59694_) {
+    @Override
+    public void loadAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(compound, lookupProvider);
         this.itemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(p_59694_) && p_59694_.contains("Items", 9)) {
-            ContainerHelper.loadAllItems(p_59694_, this.itemStacks);
+        if (!this.tryLoadLootTable(compound) && compound.contains("Items", 9)) {
+            ContainerHelper.loadAllItems(compound, this.itemStacks, lookupProvider);
+        }
+    }
+
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(compound, lookupProvider);
+        if (!this.trySaveLootTable(compound)) {
+            ContainerHelper.saveAllItems(compound, this.itemStacks, lookupProvider);
         }
 
     }
@@ -215,10 +219,10 @@ public class SenryoubakoBlockEntity extends RandomizableContainerBlockEntity imp
         return this.animationStatus == ShulkerBoxBlockEntity.AnimationStatus.CLOSED;
     }
 
-    @Override
-    protected net.minecraftforge.items.IItemHandler createUnSidedHandler() {
-        return new net.minecraftforge.items.wrapper.SidedInvWrapper(this, Direction.UP);
-    }
+//    @Override
+//    protected net.minecraftforge.items.IItemHandler createUnSidedHandler() {
+//        return new net.minecraftforge.items.wrapper.SidedInvWrapper(this, Direction.UP);
+//    }
 
     public static enum AnimationStatus {
         CLOSED,

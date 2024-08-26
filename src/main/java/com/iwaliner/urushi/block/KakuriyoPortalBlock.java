@@ -61,7 +61,8 @@ public class KakuriyoPortalBlock extends HorizonalRotateBlock implements SimpleW
 
 
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (!entity.isPassenger() && !entity.isVehicle() && entity.canChangeDimensions()) {
+//        if (!entity.isPassenger() && !entity.isVehicle() && entity.canChangeDimensions()) {
+        if (!entity.isPassenger() && !entity.isVehicle() ) {
             BlockPos center=null;
 
             outer:for(int i=-5;i<5;i++){

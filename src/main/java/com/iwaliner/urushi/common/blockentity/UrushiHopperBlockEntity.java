@@ -6,6 +6,7 @@ import com.iwaliner.urushi.common.block.UrushiHopperBlock;
 import com.iwaliner.urushi.common.blockentity.menu.UrushiHopperMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -29,9 +30,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.VanillaInventoryCodeHooks;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.items.VanillaInventoryCodeHooks;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -48,28 +50,37 @@ public class UrushiHopperBlockEntity extends RandomizableContainerBlockEntity im
     private int cooldownTime = -1;
     private long tickedGameTime;
 
+    //private final SidedInvWrapper handler = new SidedInvWrapper(this, null);
+
+//    public SidedInvWrapper getItemHandler() {
+//        return handler;
+//    }
+
     public UrushiHopperBlockEntity(BlockPos p_155550_, BlockState p_155551_) {
         super(BlockEntityRegister.UrushiHopper.get(), p_155550_, p_155551_);
     }
 
-    public void load(CompoundTag p_155588_) {
-        super.load(p_155588_);
+    @Override
+    public void loadAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(compound, lookupProvider);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(p_155588_)) {
-            ContainerHelper.loadAllItems(p_155588_, this.items);
+        if (!this.tryLoadLootTable(compound)) {
+            ContainerHelper.loadAllItems(compound, this.items, lookupProvider);
         }
 
-        this.cooldownTime = p_155588_.getInt("TransferCooldown");
+        this.cooldownTime = compound.getInt("TransferCooldown");
     }
 
-    protected void saveAdditional(CompoundTag p_187502_) {
-        super.saveAdditional(p_187502_);
-        if (!this.trySaveLootTable(p_187502_)) {
-            ContainerHelper.saveAllItems(p_187502_, this.items);
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(compound, lookupProvider);
+        if (!this.trySaveLootTable(compound)) {
+            ContainerHelper.saveAllItems(compound, this.items,lookupProvider);
         }
 
-        p_187502_.putInt("TransferCooldown", this.cooldownTime);
+        compound.putInt("TransferCooldown", this.cooldownTime);
     }
+
+
 
     public int getContainerSize() {
         return this.items.size();
@@ -140,13 +151,13 @@ public class UrushiHopperBlockEntity extends RandomizableContainerBlockEntity im
 
         return true;
     }
-    private static Optional<Pair<IItemHandler, Object>> getItemHandler(Level level, Hopper hopper, Direction hopperFacing)
-    {
-        double x = hopper.getLevelX() + (double) hopperFacing.getStepX();
-        double y = hopper.getLevelY() + (double) hopperFacing.getStepY();
-        double z = hopper.getLevelZ() + (double) hopperFacing.getStepZ();
-        return VanillaInventoryCodeHooks.getItemHandler(level, x, y, z, hopperFacing.getOpposite());
-    }
+//    private static Optional<Pair<IItemHandler, Object>> getItemHandler(Level level, Hopper hopper, Direction hopperFacing)
+//    {
+//        double x = hopper.getLevelX() + (double) hopperFacing.getStepX();
+//        double y = hopper.getLevelY() + (double) hopperFacing.getStepY();
+//        double z = hopper.getLevelZ() + (double) hopperFacing.getStepZ();
+//        return VanillaInventoryCodeHooks.getItemHandler(level, x, y, z, hopperFacing.getOpposite());
+//    }
     private static boolean isFull(IItemHandler itemHandler)
     {
         for (int slot = 0; slot < itemHandler.getSlots(); slot++)
@@ -194,7 +205,7 @@ public class UrushiHopperBlockEntity extends RandomizableContainerBlockEntity im
                 stack = ItemStack.EMPTY;
                 insertedItem = true;
             }
-            else if (ItemHandlerHelper.canItemStacksStack(itemstack, stack))
+            else if (ItemHandlerHelper.insertItem(destInventory, stack, true).isEmpty())
             {
                 int originalSize = stack.getCount();
                 stack = destInventory.insertItem(slot, stack, false);
@@ -228,37 +239,38 @@ public class UrushiHopperBlockEntity extends RandomizableContainerBlockEntity im
     public static boolean insertHook(UrushiHopperBlockEntity hopper)
     {
         Direction hopperFacing = hopper.getBlockState().getValue(UrushiHopperBlock.FACING);
-        return getItemHandler(hopper.getLevel(), hopper, hopperFacing)
-                .map(destinationResult -> {
-                    IItemHandler itemHandler = destinationResult.getKey();
-                    Object destination = destinationResult.getValue();
-                    if (isFull(itemHandler))
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        for (int i = 0; i < hopper.getContainerSize(); ++i)
-                        {
-                            if (!hopper.getItem(i).isEmpty())
-                            {
-                                ItemStack originalSlotContents = hopper.getItem(i).copy();
-                                ItemStack insertStack = hopper.removeItem(i, 1);
-                                ItemStack remainder = putStackInInventoryAllSlots(hopper, destination, itemHandler, insertStack);
-
-                                if (remainder.isEmpty())
-                                {
-                                    return true;
-                                }
-
-                                hopper.setItem(i, originalSlotContents);
-                            }
-                        }
-
-                        return false;
-                    }
-                })
-                .orElse(false);
+        return false;
+//        return getItemHandler(hopper.getLevel(), hopper, hopperFacing)
+//                .map(destinationResult -> {
+//                    IItemHandler itemHandler = destinationResult.getKey();
+//                    Object destination = destinationResult.getValue();
+//                    if (isFull(itemHandler))
+//                    {
+//                        return false;
+//                    }
+//                    else
+//                    {
+//                        for (int i = 0; i < hopper.getContainerSize(); ++i)
+//                        {
+//                            if (!hopper.getItem(i).isEmpty())
+//                            {
+//                                ItemStack originalSlotContents = hopper.getItem(i).copy();
+//                                ItemStack insertStack = hopper.removeItem(i, 1);
+//                                ItemStack remainder = putStackInInventoryAllSlots(hopper, destination, itemHandler, insertStack);
+//
+//                                if (remainder.isEmpty())
+//                                {
+//                                    return true;
+//                                }
+//
+//                                hopper.setItem(i, originalSlotContents);
+//                            }
+//                        }
+//
+//                        return false;
+//                    }
+//                })
+//                .orElse(false);
     }
     private static boolean ejectItems(Level p_155563_, BlockPos p_155564_, BlockState p_155565_, UrushiHopperBlockEntity p_155566_) {
         if (insertHook(p_155566_)) return true;
@@ -306,7 +318,7 @@ public class UrushiHopperBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     public static boolean suckInItems(Level p_155553_, Hopper p_155554_) {
-        Boolean ret = net.minecraftforge.items.VanillaInventoryCodeHooks.extractHook(p_155553_, p_155554_);
+        Boolean ret = VanillaInventoryCodeHooks.extractHook(p_155553_, p_155554_);
         if (ret != null) return ret;
         Container container = getSourceContainer(p_155553_, p_155554_);
         if (container != null) {
@@ -438,7 +450,7 @@ public class UrushiHopperBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     public static List<ItemEntity> getItemsAtAndAbove(Level p_155590_, Hopper p_155591_) {
-        return p_155591_.getSuckShape().toAabbs().stream().flatMap((p_155558_) -> {
+        return Shapes.create(p_155591_.getSuckAabb()).toAabbs().stream().flatMap((p_155558_) -> {
             return p_155590_.getEntitiesOfClass(ItemEntity.class, p_155558_.move(p_155591_.getLevelX() - 0.5D, p_155591_.getLevelY() - 0.5D, p_155591_.getLevelZ() - 0.5D), EntitySelector.ENTITY_STILL_ALIVE).stream();
         }).collect(Collectors.toList());
     }
@@ -492,6 +504,11 @@ public class UrushiHopperBlockEntity extends RandomizableContainerBlockEntity im
         return (double)this.worldPosition.getZ() + 0.5D;
     }
 
+    @Override
+    public boolean isGridAligned() {
+        return false;
+    }
+
     public void setCooldown(int p_59396_) {
         this.cooldownTime = p_59396_;
     }
@@ -513,7 +530,7 @@ public class UrushiHopperBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     public static void entityInside(Level p_155568_, BlockPos p_155569_, BlockState p_155570_, Entity p_155571_, UrushiHopperBlockEntity p_155572_) {
-        if (p_155571_ instanceof ItemEntity && Shapes.joinIsNotEmpty(Shapes.create(p_155571_.getBoundingBox().move((double)(-p_155569_.getX()), (double)(-p_155569_.getY()), (double)(-p_155569_.getZ()))), p_155572_.getSuckShape(), BooleanOp.AND)) {
+        if (p_155571_ instanceof ItemEntity && Shapes.joinIsNotEmpty(Shapes.create(p_155571_.getBoundingBox().move((double)(-p_155569_.getX()), (double)(-p_155569_.getY()), (double)(-p_155569_.getZ()))), Shapes.create(p_155572_.getSuckAabb()), BooleanOp.AND)) {
             tryMoveItems(p_155568_, p_155569_, p_155570_, p_155572_, () -> {
                 return addItem(p_155572_, (ItemEntity)p_155571_);
             });

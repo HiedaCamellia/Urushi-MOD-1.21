@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.extensions.IForgeEnchantment;
 
 
 import java.util.List;
@@ -41,11 +40,11 @@ public class NormalKatanaItem extends SwordItem {
     private final Multimap<Attribute, AttributeModifier> defaultModifiers;
 
     public NormalKatanaItem(Tier tier,int i,float f, Properties properties) {
-        super(tier, i,f, properties);
+        super(tier, properties);
         this.attackDamage = (float)i + tier.getAttackDamageBonus();
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double)this.attackDamage, AttributeModifier.Operation.ADDITION));
-        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", (double)f, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_DAMAGE.value(), new AttributeModifier(BASE_ATTACK_DAMAGE_ID, this.attackDamage, AttributeModifier.Operation.ADD_VALUE));
+        builder.put(Attributes.ATTACK_SPEED.value(), new AttributeModifier(BASE_ATTACK_SPEED_ID, f, AttributeModifier.Operation.ADD_VALUE));
         this.defaultModifiers = builder.build();
     }
 
@@ -69,18 +68,18 @@ public class NormalKatanaItem extends SwordItem {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity living, LivingEntity entity) {
-        stack.hurtAndBreak(1, entity, (p_220045_0_) -> {
-            p_220045_0_.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-        });
+//        stack.hurtAndBreak(1, entity, (slot) -> {
+//            slot.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+//        });
         return true;
     }
 
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity living) {
         if (state.getDestroySpeed(level, pos) != 0.0F) {
-            stack.hurtAndBreak(2, living, (p_220044_0_) -> {
-                p_220044_0_.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-            });
+//            stack.hurtAndBreak(2, living, (slot) -> {
+//                slot.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+//            });
         }
 
         return true; }
@@ -90,10 +89,10 @@ public class NormalKatanaItem extends SwordItem {
         return p_150897_1_.is(Blocks.COBWEB);
     }
 
-    @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(slot);
-    }
+//    @Override
+//    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+//        return slot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(slot);
+//    }
 
    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
@@ -106,17 +105,18 @@ public class NormalKatanaItem extends SwordItem {
         player.getCooldowns().addCooldown(this, 10);
         player.startUsingItem(hand);
         player.setDeltaMovement(vector3d);
-        player.getItemInHand(hand).hurtAndBreak(1, player, (x) -> {
-            x.broadcastBreakEvent(hand);
-        });
+//        player.getItemInHand(hand).hurtAndBreak(1, player, (x) -> {
+//            x.broadcastBreakEvent(hand);
+//        });
         AABB axisalignedbb =player.getBoundingBox() .inflate(4.0D, 4.0D, 4.0D);
         List<LivingEntity> list = player.level().getEntitiesOfClass(LivingEntity.class, axisalignedbb);
         if(!list.isEmpty()) {
             for (LivingEntity entity : list) {
                 if(entity instanceof Player) {
                 }else{
-                    entity.hurt(entity.damageSources().playerAttack(player), (getDamage()+EnchantmentHelper.getDamageBonus(player.getItemInHand(hand),entity.getMobType()))*0.5F);
-                    player.level().playSound((Player) null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1.5F, 1F);
+                    //entity.hurt(entity.damageSources().playerAttack(player), (getDamage()+EnchantmentHelper.modifyDamage(player.getItemInHand(hand),entity.getMobType()))*0.5F);
+                    entity.hurt(entity.damageSources().playerAttack(player), getDamage());
+                    player.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1.5F, 1F);
                 }
             }
         }
@@ -127,7 +127,8 @@ public class NormalKatanaItem extends SwordItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity living, InteractionHand hand) {
-            living.hurt(living.damageSources().playerAttack((Player) player),(getDamage()+EnchantmentHelper.getDamageBonus(player.getItemInHand(hand),living.getMobType()))*0.5F);
+        //living.hurt(living.damageSources().playerAttack((Player) player),(getDamage()+EnchantmentHelper.getDamageBonus(player.getItemInHand(hand),living.getMobType()))*0.5F);
+        living.hurt(living.damageSources().playerAttack(player),getDamage());
             this.use(player.level(),player,hand);
             player.level().playSound((Player) null, living.getX(), living.getY(), living.getZ(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, SoundSource.PLAYERS, 1.5F, 1F);
             return InteractionResult.sidedSuccess(player.level().isClientSide);

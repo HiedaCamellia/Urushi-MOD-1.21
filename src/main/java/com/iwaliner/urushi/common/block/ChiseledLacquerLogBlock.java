@@ -13,8 +13,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
@@ -125,22 +127,21 @@ public class ChiseledLacquerLogBlock extends HorizonalRotateBlock{
 
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-       if(state.getBlock() instanceof ChiseledLacquerLogBlock&& state.getValue(FILLED)){
-           ItemStack stack=player.getItemInHand(hand);
-           if(stack.getItem()== Items.BOWL){
-               stack.shrink(1);
-               if (stack.isEmpty()) {
-                   player.setItemInHand(hand, new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get()));
-               } else if (!player.getInventory().add(new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get()))) {
-                   player.drop(new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get()), false);
-               }
-               level.playSound((Player) null,(double) pos.getX()+0.5D,(double) pos.getY()+0.5D,(double) pos.getZ()+0.5D, SoundEvents.HONEY_BLOCK_BREAK, SoundSource.BLOCKS,1F,1F);
-               level.setBlockAndUpdate(pos,state.setValue(FILLED,Boolean.valueOf(false)));
-               return InteractionResult.SUCCESS;
-           }
-       }
-       return InteractionResult.FAIL;
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if(state.getBlock() instanceof ChiseledLacquerLogBlock&& state.getValue(FILLED)){
+            if(stack.getItem()== Items.BOWL){
+                stack.shrink(1);
+                if (stack.isEmpty()) {
+                    player.setItemInHand(hand, new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get()));
+                } else if (!player.getInventory().add(new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get()))) {
+                    player.drop(new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get()), false);
+                }
+                level.playSound((Player) null,(double) pos.getX()+0.5D,(double) pos.getY()+0.5D,(double) pos.getZ()+0.5D, SoundEvents.HONEY_BLOCK_BREAK, SoundSource.BLOCKS,1F,1F);
+                level.setBlockAndUpdate(pos,state.setValue(FILLED,Boolean.valueOf(false)));
+                return ItemInteractionResult.SUCCESS;
+            }
+        }
+        return ItemInteractionResult.FAIL;
     }
 
     @Override
@@ -165,9 +166,9 @@ public class ChiseledLacquerLogBlock extends HorizonalRotateBlock{
         }
     }
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
-        UrushiUtils.setInfo(list,"chiseled_lacquer_log");
-     }
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
+        UrushiUtils.setInfo(list, "chiseled_lacquer_log");
+    }
 
     @Override
     public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {

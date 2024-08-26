@@ -10,6 +10,7 @@ import com.iwaliner.urushi.common.blockentity.menu.AutoCraftingTableMenu;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -32,15 +34,23 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-public class AutoCraftingTableBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, StackedContentsCompatible, RecipeHolder, MenuProvider {
+public class AutoCraftingTableBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, StackedContentsCompatible, MenuProvider {
     public int litTime;
+    private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(10, ItemStack.EMPTY);
+    private final SidedInvWrapper handler = new SidedInvWrapper(this, null);
 
+    public SidedInvWrapper getItemHandler() {
+        return handler;
+    }
     protected final ContainerData dataAccess = new ContainerData() {
         public int get(int p_58431_) {
             switch(p_58431_) {
@@ -127,12 +137,12 @@ public class AutoCraftingTableBlockEntity extends BaseContainerBlockEntity imple
         }
 
     };
-    private LazyOptional<ItemStackHandler> resultOptional = LazyOptional.empty();
 
-    private LazyOptional<ItemStackHandler> ingredientsOptional = LazyOptional.empty();
-    private LazyOptional<ItemStackHandler> resultSampleOptional = LazyOptional.empty();
+//    private LazyOptional<ItemStackHandler> resultOptional = LazyOptional.empty();
+//    private LazyOptional<ItemStackHandler> ingredientsOptional = LazyOptional.empty();
+//    private LazyOptional<ItemStackHandler> resultSampleOptional = LazyOptional.empty();
+//    private LazyOptional<ItemStackHandler> ingredientsSampleOptional = LazyOptional.empty();
 
-    private LazyOptional<ItemStackHandler> ingredientsSampleOptional = LazyOptional.empty();
     private final NonNullList<ItemStack> slotList = NonNullList.of(resultSample.getStackInSlot(0), ingredientsSample.getStackInSlot(0),ingredientsSample.getStackInSlot(1),ingredientsSample.getStackInSlot(2),ingredientsSample.getStackInSlot(3),ingredientsSample.getStackInSlot(4),ingredientsSample.getStackInSlot(5),ingredientsSample.getStackInSlot(6),ingredientsSample.getStackInSlot(7),ingredientsSample.getStackInSlot(8),result.getStackInSlot(0), ingredients.getStackInSlot(0),ingredients.getStackInSlot(1),ingredients.getStackInSlot(2),ingredients.getStackInSlot(3),ingredients.getStackInSlot(4),ingredients.getStackInSlot(5),ingredients.getStackInSlot(6),ingredients.getStackInSlot(7),ingredients.getStackInSlot(8));
     protected final RecipeType<? extends CraftingRecipe> recipeType;
     private int processTime;
@@ -143,21 +153,7 @@ public class AutoCraftingTableBlockEntity extends BaseContainerBlockEntity imple
         this.recipeType = RecipeType.CRAFTING;
     }
 
-    public LazyOptional<ItemStackHandler> getIngredientsOptional() {
-        return ingredientsOptional;
-    }
-
-    public LazyOptional<ItemStackHandler> getIngredientsSampleOptional() {
-        return ingredientsSampleOptional;
-    }
-
-    public LazyOptional<ItemStackHandler> getResultOptional() {
-        return resultOptional;
-    }
-
-    public LazyOptional<ItemStackHandler> getResultSampleOptional() {
-        return resultSampleOptional;
-    } public ItemStackHandler getIngredientsSample() {
+ public ItemStackHandler getIngredientsSample() {
         return ingredientsSample;
     }
 
@@ -191,52 +187,54 @@ public class AutoCraftingTableBlockEntity extends BaseContainerBlockEntity imple
     @Override
     public void onLoad() {
         super.onLoad();
-        resultOptional = LazyOptional.of(() -> result);
-        ingredientsOptional = LazyOptional.of(() -> ingredients);
-        resultSampleOptional = LazyOptional.of(() -> resultSample);
-        ingredientsSampleOptional = LazyOptional.of(() -> ingredientsSample);
+//        resultOptional = LazyOptional.of(() -> result);
+//        ingredientsOptional = LazyOptional.of(() -> ingredients);
+//        resultSampleOptional = LazyOptional.of(() -> resultSample);
+//        ingredientsSampleOptional = LazyOptional.of(() -> ingredientsSample);
     }
 
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        CompoundTag data = tag.getCompound(ModCoreUrushi.ModID);
+    @Override
+    public void loadAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(compound, lookupProvider);
+        CompoundTag data = compound.getCompound(ModCoreUrushi.ModID);
         if(data.contains("ingredients", Tag.TAG_COMPOUND)) {
-            this.ingredients.deserializeNBT(data.getCompound("ingredients"));
+            this.ingredients.deserializeNBT(lookupProvider,data.getCompound("ingredients"));
         }
         if(data.contains("result", Tag.TAG_COMPOUND)) {
-            this.result.deserializeNBT(data.getCompound("result"));
+            this.result.deserializeNBT(lookupProvider,data.getCompound("result"));
         }
         if(data.contains("ingredientsSample", Tag.TAG_COMPOUND)) {
-            this.ingredientsSample.deserializeNBT(data.getCompound("ingredientsSample"));
+            this.ingredientsSample.deserializeNBT(lookupProvider,data.getCompound("ingredientsSample"));
         }
         if(data.contains("resultSample", Tag.TAG_COMPOUND)) {
-            this.resultSample.deserializeNBT(data.getCompound("resultSample"));
+            this.resultSample.deserializeNBT(lookupProvider,data.getCompound("resultSample"));
         }
-        this.litTime = tag.getInt("BurnTime");
-        CompoundTag compoundtag = tag.getCompound("RecipesUsed");
+        this.litTime = compound.getInt("BurnTime");
+        CompoundTag compoundtag = compound.getCompound("RecipesUsed");
 
         for(String s : compoundtag.getAllKeys()) {
-            this.recipesUsed.put(new ResourceLocation(s), compoundtag.getInt(s));
+            this.recipesUsed.put(ResourceLocation.parse(s), compoundtag.getInt(s));
         }
-
     }
 
-    protected void saveAdditional(CompoundTag p_187452_) {
-        super.saveAdditional(p_187452_);
+    @Override
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(compound, lookupProvider);
         var data=new CompoundTag();
-        data.put("ingredients",this.ingredients.serializeNBT());
-        data.put("result",this.result.serializeNBT());
-        data.put("ingredientsSample",this.ingredientsSample.serializeNBT());
-        data.put("resultSample",this.resultSample.serializeNBT());
-        p_187452_.put(ModCoreUrushi.ModID,data);
-        p_187452_.putInt("BurnTime", this.litTime);
+        data.put("ingredients",this.ingredients.serializeNBT(lookupProvider));
+        data.put("result",this.result.serializeNBT(lookupProvider));
+        data.put("ingredientsSample",this.ingredientsSample.serializeNBT(lookupProvider));
+        data.put("resultSample",this.resultSample.serializeNBT(lookupProvider));
+        compound.put(ModCoreUrushi.ModID,data);
+        compound.putInt("BurnTime", this.litTime);
 
         CompoundTag compoundtag = new CompoundTag();
         this.recipesUsed.forEach((p_187449_, p_187450_) -> {
             compoundtag.putInt(p_187449_.toString(), p_187450_);
         });
-        p_187452_.put("RecipesUsed", compoundtag);
+        compound.put("RecipesUsed", compoundtag);
     }
+
     public boolean isLit() {
         return this.litTime > 0;
     }
@@ -435,14 +433,16 @@ public class AutoCraftingTableBlockEntity extends BaseContainerBlockEntity imple
                     return false;
                 }
             }, 3, 3);
+            List<ItemStack> inputs = new ArrayList<>();
             for (int i = 0; i < 9; i++) {
                 craftingcontainer.setItem(i, blockEntity.ingredientsSample.getStackInSlot(i));
+                inputs.add(blockEntity.ingredientsSample.getStackInSlot(i));
             }
-            Optional<CraftingRecipe> optional = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingcontainer, level);
+            Optional<RecipeHolder<CraftingRecipe>> optional = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, CraftingInput.of(3,3,inputs), level);
             ItemStack itemstack = ItemStack.EMPTY;
             if (optional.isPresent()) {
-                CraftingRecipe craftingrecipe = optional.get();
-                itemstack = craftingrecipe.assemble(craftingcontainer,level.registryAccess());
+                CraftingRecipe craftingrecipe = optional.get().value();
+                itemstack = craftingrecipe.assemble(CraftingInput.of(3,3,inputs),level.registryAccess());
 
             }
             blockEntity.setItem(0, itemstack);
@@ -481,6 +481,15 @@ public class AutoCraftingTableBlockEntity extends BaseContainerBlockEntity imple
         return Component.translatable("container.urushi_auto_crafting_table");
     }
 
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return stacks;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> nonNullList) {
+        this.stacks = nonNullList;
+    }
 
 
     protected AbstractContainerMenu createMenu(int i, Inventory inventory) {
@@ -574,8 +583,8 @@ public class AutoCraftingTableBlockEntity extends BaseContainerBlockEntity imple
 
     public void setRecipeUsed(@Nullable Recipe<?> p_193056_1_) {
         if (p_193056_1_ != null) {
-            ResourceLocation resourcelocation = p_193056_1_.getId();
-            this.recipesUsed.addTo(resourcelocation, 1);
+//            ResourceLocation resourcelocation = p_193056_1_.getId();
+//            this.recipesUsed.addTo(resourcelocation, 1);
         }
     }
     @Nullable
@@ -602,26 +611,6 @@ public class AutoCraftingTableBlockEntity extends BaseContainerBlockEntity imple
            return this.getBlockState().getValue(BlockStateProperties.FACING);
         }
         return Direction.DOWN;
-    }
-    @Override
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if(capability == ForgeCapabilities.ITEM_HANDLER) {
-            if(facing == this.getExportFacing())
-                return this.resultOptional.cast();
-
-
-            return this.ingredientsOptional.cast();
-        }
-
-        return super.getCapability(capability, facing);
-    }
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        this.ingredientsOptional.invalidate();
-        this.resultOptional.invalidate();
-        this.ingredientsSampleOptional.invalidate();
-        this.resultSampleOptional.invalidate();
     }
 
 
