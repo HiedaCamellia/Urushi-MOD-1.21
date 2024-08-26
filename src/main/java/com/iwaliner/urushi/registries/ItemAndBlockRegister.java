@@ -40,7 +40,6 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
-@EventBusSubscriber(modid = ModCoreUrushi.ModID, bus = EventBusSubscriber.Bus.MOD)
 public class ItemAndBlockRegister {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ModCoreUrushi.ModID);
     public static final DeferredRegister.Blocks BLOCKS= DeferredRegister.createBlocks(ModCoreUrushi.ModID);

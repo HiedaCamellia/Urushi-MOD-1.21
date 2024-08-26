@@ -132,7 +132,8 @@ dependencies {
     // We add the full version to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
     // localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
     compileOnly("curse.maven:jei-238222:5661798")
-    runtimeOnly("curse.maven:tofucraftreload-317469:5626817")
+    runtimeOnly("curse.maven:tofucraftreload-317469:5591062")
+    runtimeOnly "curse.maven:bagus-lib-866533:5604028"
     // Example mod dependency using a file as dependency
     // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
 

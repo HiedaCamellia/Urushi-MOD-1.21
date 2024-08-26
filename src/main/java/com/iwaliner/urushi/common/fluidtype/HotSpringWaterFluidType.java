@@ -17,7 +17,7 @@ import net.neoforged.neoforge.fluids.FluidType.Properties;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-@EventBusSubscriber
+//@EventBusSubscriber
 public class HotSpringWaterFluidType extends FluidType {
     /**
      * Default constructor.
@@ -28,7 +28,7 @@ public class HotSpringWaterFluidType extends FluidType {
         super(properties);
     }
 
-    @SubscribeEvent
+    //@SubscribeEvent
     static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerFluidType(new IClientFluidTypeExtensions() {
             private static final ResourceLocation HotSpringStillTex = ResourceLocation.withDefaultNamespace("block/water_still");
@@ -54,6 +54,6 @@ public class HotSpringWaterFluidType extends FluidType {
             public int getTintColor() {
                 return 0xbf60c3c9;
             }
-        });
+        },new HotSpringWaterFluidType(Properties.create()));
     }
 }

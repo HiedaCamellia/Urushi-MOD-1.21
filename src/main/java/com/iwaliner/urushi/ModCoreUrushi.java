@@ -127,7 +127,7 @@ public class ModCoreUrushi {
         FluidTypeRegister.register(modEventBus);
 
         /**バイオームを登録*/
-       // BiomeRegister.register(modEventBus);
+        BiomeRegister.register(modEventBus);
 
         /**レシピタイプを登録*/
         RecipeTypeRegister.register(modEventBus);
@@ -147,9 +147,9 @@ public class ModCoreUrushi {
 
         FeatureRegister.register(modEventBus);
 
-       // PlacedFeatureRegister.register(modEventBus);
+        PlacedFeatureRegister.register(modEventBus);
 
-//        ConfiguredFeatureRegister.register(modEventBus);
+        ConfiguredFeatureRegister.ConfiguredFeatures.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
 
     }
