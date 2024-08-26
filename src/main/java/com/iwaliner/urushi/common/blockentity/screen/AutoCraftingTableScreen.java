@@ -32,7 +32,7 @@ public class AutoCraftingTableScreen extends AbstractContainerScreen<AutoCraftin
 
 {
 
-    private static final ResourceLocation CRAFTING_TABLE_LOCATION = new ResourceLocation("urushi:textures/gui/auto_crafting_table.png");
+    private static final ResourceLocation CRAFTING_TABLE_LOCATION = ResourceLocation.parse("urushi:textures/gui/auto_crafting_table.png");
     private final RecipeBookComponent recipeBookComponent = new RecipeBookComponent();
 
     public AutoCraftingTableScreen(AutoCraftingTableMenu p_i51104_1_, Inventory p_i51104_3_, Component p_i51104_4_) {

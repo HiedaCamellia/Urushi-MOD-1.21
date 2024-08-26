@@ -12,8 +12,8 @@ import net.neoforged.neoforge.client.event.InputEvent;
 public class ClientNonBusSetUp {
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
-        if(ClientSetUp.connectionKey.consumeClick()) {
-            NetworkAccess.sendToServer(new FramedBlockTextureConnectionPacket(ClientSetUp.connectionKey.isDown()));
-        }
+//        if(ClientSetUp.connectionKey.consumeClick()) {
+//            NetworkAccess.sendToServer(new FramedBlockTextureConnectionPacket(ClientSetUp.connectionKey.isDown()));
+//        }
     }
 }

@@ -54,9 +54,9 @@ if (!CampfireBlock.canLight(state) && !CandleBlock.canLight(state) && !CandleCak
                     ItemStack itemstack = context.getItemInHand();
                     if (player instanceof ServerPlayer) {
                         CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer)player, blockpos1, itemstack);
-                        itemstack.hurtAndBreak(1, player, (p_41300_) -> {
-                            p_41300_.broadcastBreakEvent(context.getHand());
-                        });
+//                        itemstack.hurtAndBreak(1, player, (p_41300_) -> {
+//                            p_41300_.broadcastBreakEvent(context.getHand());
+//                        });
                     }
 
                     return InteractionResult.sidedSuccess(level.isClientSide());
@@ -68,9 +68,9 @@ if (!CampfireBlock.canLight(state) && !CandleBlock.canLight(state) && !CandleCak
                 level.setBlock(pos, state.setValue(BlockStateProperties.LIT, Boolean.valueOf(true)), 11);
                 level.gameEvent(player, GameEvent.BLOCK_PLACE, pos);
                 if (player != null) {
-                    context.getItemInHand().hurtAndBreak(1, player, (p_41303_) -> {
-                        p_41303_.broadcastBreakEvent(context.getHand());
-                    });
+//                    context.getItemInHand().hurtAndBreak(1, player, (p_41303_) -> {
+//                        p_41303_.broadcastBreakEvent(context.getHand());
+//                    });
                 }
 
                 return InteractionResult.sidedSuccess(level.isClientSide());
@@ -80,7 +80,7 @@ if (!CampfireBlock.canLight(state) && !CandleBlock.canLight(state) && !CandleCak
 
     }
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list,"amber_igniter1");
     }
 

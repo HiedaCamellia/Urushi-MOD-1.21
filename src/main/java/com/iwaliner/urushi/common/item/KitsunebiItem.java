@@ -111,7 +111,7 @@ public class KitsunebiItem extends Item implements ElementItem {
       }
    }
    @Override
-   public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
+   public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
       UrushiUtils.setInfo(list,"kitsunebi");
       UrushiUtils.setInfo(list,"kitsunebi2");
       UrushiUtils.setInfo(list,"kitsunebi3");

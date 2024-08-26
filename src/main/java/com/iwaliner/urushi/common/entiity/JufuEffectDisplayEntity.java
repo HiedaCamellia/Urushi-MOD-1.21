@@ -4,6 +4,7 @@ import com.iwaliner.urushi.registries.EntityRegister;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
@@ -63,7 +64,7 @@ public class JufuEffectDisplayEntity extends FallingBlockEntity {
     }
 
 
-    public void tick() {
+    public void tick(HolderLookup.Provider lookupProvider) {
         if (this.blockState.isAir()) {
             this.discard();
         } else {
@@ -118,14 +119,14 @@ public class JufuEffectDisplayEntity extends FallingBlockEntity {
                                     if (this.blockData != null && this.blockState.hasBlockEntity()) {
                                         BlockEntity blockentity = this.level().getBlockEntity(blockpos);
                                         if (blockentity != null) {
-                                            CompoundTag compoundtag = blockentity.saveWithoutMetadata();
+                                            CompoundTag compoundtag = blockentity.saveWithoutMetadata(lookupProvider);
 
                                             for(String s : this.blockData.getAllKeys()) {
                                                 compoundtag.put(s, this.blockData.get(s).copy());
                                             }
 
                                             try {
-                                                blockentity.load(compoundtag);
+                                                blockentity.loadCustomOnly(compoundtag,lookupProvider);
                                             } catch (Exception exception) {
                                                 LOGGER.error("Failed to load block entity from falling block", (Throwable)exception);
                                             }

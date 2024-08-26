@@ -78,9 +78,9 @@ public class WagasaItem extends Item implements ElementItem {
         }
     }
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
-    UrushiUtils.setInfo(list,"wagasa");
-        UrushiUtils.setInfo(list,"wagasa2");
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
+        UrushiUtils.setInfo(list, "wagasa");
+        UrushiUtils.setInfo(list, "wagasa2");
     }
 
     @Override

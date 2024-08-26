@@ -90,9 +90,9 @@ public class UchiwaItem extends Item implements ElementItem {
                             block instanceof FallenLeavesBlock) {
                         level.destroyBlock(blockPos, true);
                         ++cnt;
-                        uchiwa.hurtAndBreak(1, player, (x) -> {
-                            x.broadcastBreakEvent(hand);
-                        });
+//                        uchiwa.hurtAndBreak(1, player, (x) -> {
+//                            x.broadcastBreakEvent(hand);
+//                        });
                     }
                 }
             }
@@ -101,7 +101,7 @@ public class UchiwaItem extends Item implements ElementItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack p_41421_, @Nullable Level p_41422_, @NotNull List<Component> list, @NotNull TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list,"uchiwa");
         UrushiUtils.setInfo(list,"uchiwa2");
         UrushiUtils.setInfo(list,"uchiwa3");

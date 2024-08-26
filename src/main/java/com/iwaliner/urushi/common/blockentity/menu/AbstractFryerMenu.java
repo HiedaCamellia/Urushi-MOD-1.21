@@ -76,6 +76,7 @@ public abstract class AbstractFryerMenu extends RecipeBookMenu<SimpleInput,Fryin
         this.getSlot(2).set(ItemStack.EMPTY);
     }
 
+
     public boolean recipeMatches(Recipe<? super RecipeInput> p_38980_) {
         return p_38980_.matches(new SimpleInput(List.of(this.getSlot(0).getItem())), this.level);
     }

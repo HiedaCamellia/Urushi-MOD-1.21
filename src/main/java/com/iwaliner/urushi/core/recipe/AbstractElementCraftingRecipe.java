@@ -46,6 +46,10 @@ public abstract class AbstractElementCraftingRecipe implements Recipe<ElementInp
         return this.output;
     }
 
+    public ItemStack getResultItem() {
+        return this.output;
+    }
+
     public int getReiryoku() {
         return this.reiryoku;
     }

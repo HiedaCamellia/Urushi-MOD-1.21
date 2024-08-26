@@ -6,10 +6,12 @@ import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.registries.RecipeTypeRegister;
 import com.iwaliner.urushi.common.blockentity.menu.FryerMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 public  class FryerBlockEntity extends AbstractFryerBlockEntity  {
@@ -18,6 +20,16 @@ public  class FryerBlockEntity extends AbstractFryerBlockEntity  {
     }
     protected Component getDefaultName() {
         return Component.translatable("container.fryer");
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return null;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> nonNullList) {
+
     }
 
 

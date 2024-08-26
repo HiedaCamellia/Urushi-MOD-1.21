@@ -1,18 +1,14 @@
 package com.iwaliner.urushi.common.world.dimension;
 
-import com.iwaliner.urushi.block.KakuriyoPortalBlock;
-import com.iwaliner.urushi.registries.DimensionRegister;
+import com.iwaliner.urushi.common.block.KakuriyoPortalBlock;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
-import com.iwaliner.urushi.ModCoreUrushi;
 import com.iwaliner.urushi.registries.TagUrushi;
 import com.iwaliner.urushi.common.block.KasugaLanternBlock;
 import com.iwaliner.urushi.common.block.ParapetBlock;
 import com.iwaliner.urushi.common.block.SimpleShapedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
- 
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -20,11 +16,9 @@ import net.minecraft.world.level.block.*;
 
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.portal.DimensionTransition;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class KakuriyoTeleporter implements DimensionTransition.PostDimensionTransition {
 

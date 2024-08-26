@@ -5,6 +5,7 @@ import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.common.block.HiddenInvisibleButtonBlock;
 import com.iwaliner.urushi.common.block.InvisibleButtonBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,15 +17,17 @@ public class InvisibleButtonBlockEntity extends BlockEntity {
     public InvisibleButtonBlockEntity(BlockPos p_155550_, BlockState p_155551_) {
         super(BlockEntityRegister.InvisibleButton.get(), p_155550_, p_155551_);
     }
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
         this.time = tag.getInt("time");
     }
 
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
         tag.putInt("time", this.time);
     }
+
     public static void tick(Level level, BlockPos pos, BlockState state, InvisibleButtonBlockEntity blockEntity) {
         --blockEntity.time;
         if(!level.isClientSide()&&blockEntity.time<=0) {

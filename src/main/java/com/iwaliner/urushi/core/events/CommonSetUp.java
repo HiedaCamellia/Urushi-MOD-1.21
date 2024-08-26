@@ -18,7 +18,7 @@ import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 public class CommonSetUp {
     @SubscribeEvent
     public static void RegisterRendererEvent(RegisterSpawnPlacementsEvent event) {
-        event.register(EntityRegister.Ghost.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.WORLD_SURFACE, Monster::checkMonsterSpawnRules);
+        event.register(EntityRegister.Ghost.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.WORLD_SURFACE, Monster::checkMonsterSpawnRules, RegisterSpawnPlacementsEvent.Operation.AND);
         NetworkAccess.register();
     }
 }

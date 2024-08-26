@@ -61,6 +61,9 @@ public class FryingRecipe implements Recipe<SimpleInput> {
         return output.copy();
     }
 
+    public ItemStack getResultItem() {
+        return output.copy();
+    }
 
     public NonNullList<Ingredient> getIngredient() {
         NonNullList<Ingredient> list = NonNullList.create();

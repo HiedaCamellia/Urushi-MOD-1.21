@@ -213,8 +213,8 @@ public abstract class AbstractReiryokuStorableBlockEntity extends BlockEntity im
     }
 
     /**更新時のタグ*/
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
+        return this.saveWithoutMetadata(lookupProvider);
     }
 
     /**更新させる*/

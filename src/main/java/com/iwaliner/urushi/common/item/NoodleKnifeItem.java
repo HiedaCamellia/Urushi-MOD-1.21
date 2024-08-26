@@ -30,17 +30,17 @@ public class NoodleKnifeItem extends Item {
         playerentity.startUsingItem(context.getHand());
         if(context.getLevel().getBlockState(context.getClickedPos()).getBlock() ==ItemAndBlockRegister.dough.get()){
             context.getLevel().setBlock(context.getClickedPos(), ItemAndBlockRegister.udon.get().defaultBlockState().setValue(HorizonalRotateBlock.FACING,context.getLevel().getBlockState(context.getClickedPos()).getValue(HorizonalRotateBlock.FACING)),2);
-               itemstack.hurtAndBreak(1, playerentity, (x) -> {
-                        x.broadcastBreakEvent(context.getHand());
-                    });
+//               itemstack.hurtAndBreak(1, playerentity, (x) -> {
+//                        x.broadcastBreakEvent(context.getHand());
+//                    });
             context.getLevel().playSound((Player) null, context.getClickedPos(), SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1F);
 
             return InteractionResult.SUCCESS;
                 }else if(context.getLevel().getBlockState(context.getClickedPos()).getBlock() ==ItemAndBlockRegister.alkaline_dough.get()){
             context.getLevel().setBlock(context.getClickedPos(), ItemAndBlockRegister.alkaline_noodles.get().defaultBlockState().setValue(HorizonalRotateBlock.FACING,context.getLevel().getBlockState(context.getClickedPos()).getValue(HorizonalRotateBlock.FACING)),2);
-            itemstack.hurtAndBreak(1, playerentity, (x) -> {
-                x.broadcastBreakEvent(context.getHand());
-            });
+//            itemstack.hurtAndBreak(1, playerentity, (x) -> {
+//                x.broadcastBreakEvent(context.getHand());
+//            });
             context.getLevel().playSound((Player) null, context.getClickedPos(), SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 1F);
 
             return InteractionResult.SUCCESS;
@@ -49,7 +49,7 @@ public class NoodleKnifeItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack p_41421_, @org.jetbrains.annotations.Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
       UrushiUtils.setInfo(list,"noodleknife");
     }
 

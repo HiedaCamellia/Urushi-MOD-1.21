@@ -24,9 +24,9 @@ public class BakedMochochoItem extends Item {
         super(p_41383_);
     }
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
        try {
-           long gametime= level.getGameTime()%100;
+           long gametime= context.level().getGameTime()%100;
            if (gametime<20) {
                UrushiUtils.setInfoWithColor(list, "obanyaki", ChatFormatting.WHITE);
            } else if(gametime<40){

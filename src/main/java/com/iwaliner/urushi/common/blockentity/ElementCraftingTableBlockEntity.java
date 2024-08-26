@@ -49,7 +49,7 @@ public class ElementCraftingTableBlockEntity extends AbstractReiryokuStorableBlo
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
         CompoundTag compoundtag = new CompoundTag();
         compoundtag.putInt("coolTime", this.coolTime);
         this.putBaseTag(compoundtag);

@@ -63,6 +63,9 @@ public class SandpaperPolishingRecipe implements Recipe<SimpleInput> {
     public ItemStack getResultItem(HolderLookup.Provider provider) {
         return output.copy();
     }
+    public ItemStack getResultItem() {
+        return output.copy();
+    }
 
 
     public NonNullList<Ingredient> getIngredient() {

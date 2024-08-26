@@ -4,6 +4,7 @@ import com.iwaliner.urushi.core.config.ConfigUrushi;
 import com.iwaliner.urushi.core.util.ElementUtils;
 import com.iwaliner.urushi.core.util.interfaces.HasReiryokuItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.world.item.*;
@@ -23,16 +24,14 @@ public abstract class AbstractMagatamaItem extends Item implements HasReiryokuIt
     }
 
     @Override
-
-
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         list.add((Component.translatable("info.urushi.magatama1")).withStyle(ChatFormatting.GRAY));
         list.add((Component.translatable("info.urushi.magatama2")).withStyle(ChatFormatting.GRAY));
 
-        if (stack.hasTag()) {
+        if (stack.get(DataComponents.CUSTOM_DATA)!=null){ {
             list.add((Component.translatable("info.urushi.stored_reiryoku_amount").append(" "+ElementUtils.getStoredReiryokuAmount(stack))).withStyle(ChatFormatting.WHITE));
         }
-    }
+    }}
 
    /* @Override
     public InteractionResult useOn(UseOnContext context) {
@@ -65,4 +64,5 @@ public abstract class AbstractMagatamaItem extends Item implements HasReiryokuIt
         }
         return InteractionResult.FAIL;
     }*/
-}
+//        return null;
+    }

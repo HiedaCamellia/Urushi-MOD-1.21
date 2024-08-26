@@ -38,10 +38,7 @@ public class CushionEntity extends Entity {
         this.yo = p_i1705_4_;
         this.zo = p_i1705_6_;
     }
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        this.entityData.define(DATA_ID_TYPE, DyeColor.WHITE.ordinal());
-    }
+
     public DyeColor getCushionType() {
         return DyeColor.byId(this.entityData.get(DATA_ID_TYPE));
     }
@@ -166,6 +163,10 @@ public class CushionEntity extends Entity {
     }
 
 
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_ID_TYPE, DyeColor.WHITE.ordinal());
+    }
 
     @Override
     public void tick() {

@@ -1,11 +1,7 @@
-package com.iwaliner.urushi.block;
+package com.iwaliner.urushi.common.block;
 
 import com.iwaliner.urushi.ModCoreUrushi;
 
-import com.iwaliner.urushi.common.block.GhostKakuriyoPortalCoreBlock;
-import com.iwaliner.urushi.common.block.HorizonalRotateBlock;
-import com.iwaliner.urushi.common.block.KakuriyoPortalCoreBlock;
-import com.iwaliner.urushi.common.world.dimension.KakuriyoTeleporter;
 import com.iwaliner.urushi.registries.DimensionRegister;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.registries.TagUrushi;

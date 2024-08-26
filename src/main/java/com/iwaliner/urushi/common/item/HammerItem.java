@@ -59,16 +59,16 @@ public class HammerItem extends Item {
                     context.getLevel().setBlockAndUpdate(context.getClickedPos(), ironIngotBlock.getPostBlock().defaultBlockState().setValue(IronIngotBlock.FACING, context.getLevel().getBlockState(context.getClickedPos()).getValue(IronIngotBlock.FACING)));
                     context.getLevel().addParticle(ParticleTypes.FLAME,  d0,d1, d2, 0.0D, 0D, 0.0D);
                     context.getLevel().playSound((Player) null, context.getClickedPos().getX(), context.getClickedPos().getY(), context.getClickedPos().getZ(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.3F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-                    itemstack.hurtAndBreak(1, playerentity, (x) -> {
-                        x.broadcastBreakEvent(context.getHand());
-                    });
+//                    itemstack.hurtAndBreak(1, playerentity, (x) -> {
+//                        x.broadcastBreakEvent(context.getHand());
+//                    });
                     return InteractionResult.SUCCESS;
                 }else{
                     context.getLevel().addParticle(ParticleTypes.FLAME,  d0,d1, d2, 0.0D, 0D, 0.0D);
                     context.getLevel().playSound((Player) null, context.getClickedPos().getX(), context.getClickedPos().getY(), context.getClickedPos().getZ(), SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.3F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-                    itemstack.hurtAndBreak(1, playerentity, (x) -> {
-                        x.broadcastBreakEvent(context.getHand());
-                    });
+//                    itemstack.hurtAndBreak(1, playerentity, (x) -> {
+//                        x.broadcastBreakEvent(context.getHand());
+//                    });
                     return InteractionResult.SUCCESS;
                 }
             }
@@ -104,9 +104,9 @@ public class HammerItem extends Item {
         }else if(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof FramedPaneBlock ||context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof AbstractFramedBlock){
             BlockState state=context.getLevel().getBlockState(context.getClickedPos());
             context.getLevel().setBlockAndUpdate(context.getClickedPos(), state.setValue(AbstractFramedBlock.VARIANT, !state.getValue(AbstractFramedBlock.VARIANT)));
-            itemstack.hurtAndBreak(1, playerentity, (x) -> {
-                x.broadcastBreakEvent(context.getHand());
-            });
+//            itemstack.hurtAndBreak(1, playerentity, (x) -> {
+//                x.broadcastBreakEvent(context.getHand());
+//            });
             context.getLevel().playSound((Player) null, context.getClickedPos().getX(), context.getClickedPos().getY(), context.getClickedPos().getZ(), SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1F, 1F);
             playerentity.getCooldowns().removeCooldown(this);
             return InteractionResult.SUCCESS;
@@ -120,16 +120,16 @@ public class HammerItem extends Item {
                 level.setBlockAndUpdate(pos, resultState);
                 //  context.getLevel().addParticle(ParticleTypes.FLAME,  d0,d1, d2, 0.0D, 0D, 0.0D);
                 level.playSound((Player) null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.3F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-                hammer.hurtAndBreak(1, player, (x) -> {
-                    x.broadcastBreakEvent(hand);
-                });
+//                hammer.hurtAndBreak(1, player, (x) -> {
+//                    x.broadcastBreakEvent(hand);
+//                });
                 return InteractionResult.SUCCESS;
             } else {
                 //   context.getLevel().addParticle(ParticleTypes.FLAME,  d0,d1, d2, 0.0D, 0D, 0.0D);
                 level.playSound((Player) null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.3F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-                hammer.hurtAndBreak(1, player, (x) -> {
-                    x.broadcastBreakEvent(hand);
-                });
+//                hammer.hurtAndBreak(1, player, (x) -> {
+//                    x.broadcastBreakEvent(hand);
+//                });
                 return InteractionResult.SUCCESS;
             }
         }else{
@@ -137,7 +137,7 @@ public class HammerItem extends Item {
         }
     }
     @Override
-    public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> list, TooltipFlag p_41424_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list,"hammer");
     }
 

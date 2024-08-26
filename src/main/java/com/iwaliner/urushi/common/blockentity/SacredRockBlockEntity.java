@@ -7,6 +7,7 @@ import com.iwaliner.urushi.core.util.ElementUtils;
 import com.iwaliner.urushi.core.util.interfaces.ReiryokuExportable;
 import com.iwaliner.urushi.core.util.interfaces.Tiered;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -18,19 +19,19 @@ public class SacredRockBlockEntity extends AbstractReiryokuStorableBlockEntity i
         super(BlockEntityRegister.SacredRock.get(),100, p_155550_, p_155551_);
     }
 
-    public void load(CompoundTag tag) {
-        super.load(tag);
-       this.coolTime = tag.getInt("coolTime");
-
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        this.coolTime = tag.getInt("coolTime");
     }
 
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
         tag.putInt("coolTime", this.coolTime);
 
     }
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
         CompoundTag compoundtag = new CompoundTag();
         compoundtag.putInt("coolTime", this.coolTime);
        this.putBaseTag(compoundtag);

@@ -5,6 +5,7 @@ import com.iwaliner.urushi.core.util.ElementType;
 import com.iwaliner.urushi.core.util.interfaces.ReiryokuExportable;
 import com.iwaliner.urushi.core.util.interfaces.ReiryokuImportable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,7 +17,7 @@ public class TankBlockEntity extends AbstractReiryokuStorableBlockEntity impleme
 
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
         CompoundTag compoundtag = new CompoundTag();
         this.putBaseTag(compoundtag);
         return compoundtag;

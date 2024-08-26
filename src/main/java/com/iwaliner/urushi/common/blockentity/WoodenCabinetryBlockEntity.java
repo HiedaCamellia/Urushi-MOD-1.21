@@ -4,6 +4,7 @@ package com.iwaliner.urushi.common.blockentity;
 import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.common.block.WoodenCabinetrySlabBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -53,22 +54,22 @@ public class WoodenCabinetryBlockEntity extends RandomizableContainerBlockEntity
         super(BlockEntityRegister.WoodenCabinetryBlockEntity.get(), p_155052_, p_155053_);
     }
 
-    protected void saveAdditional(CompoundTag p_187459_) {
-        super.saveAdditional(p_187459_);
-        if (!this.trySaveLootTable(p_187459_)) {
-            ContainerHelper.saveAllItems(p_187459_, this.items);
-        }
-
-    }
-
-    public void load(CompoundTag p_155055_) {
-        super.load(p_155055_);
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(p_155055_)) {
-            ContainerHelper.loadAllItems(p_155055_, this.items);
+        if (!this.tryLoadLootTable(tag)) {
+            ContainerHelper.loadAllItems(tag, this.items, lookupProvider);
         }
-
     }
+
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        if (!this.trySaveLootTable(tag)) {
+            ContainerHelper.saveAllItems(tag, this.items, lookupProvider);
+        }
+    }
+
 
     public int getContainerSize() {
         return 54;
