@@ -34,7 +34,7 @@ public class ConnectableTrapdoorBlock extends TrapDoorBlock {
         p_203421_0_.put(Direction.DOWN, DOWN);
     });
     public ConnectableTrapdoorBlock(Properties p_i48307_1_) {
-        super(p_i48307_1_, BlockSetType.OAK);
+        super(BlockSetType.OAK, p_i48307_1_);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OPEN, Boolean.valueOf(false)).setValue(HALF, Half.BOTTOM).setValue(POWERED, Boolean.valueOf(false)).setValue(WATERLOGGED, Boolean.valueOf(false)).setValue(UP,Boolean.valueOf(false)).setValue(DOWN,Boolean.valueOf(false)).setValue(NORTH,Boolean.valueOf(false)).setValue(SOUTH,Boolean.valueOf(false)).setValue(WEST,Boolean.valueOf(false)).setValue(EAST,Boolean.valueOf(false)));
 
     }

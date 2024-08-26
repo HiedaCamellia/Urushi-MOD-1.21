@@ -1,5 +1,6 @@
 package com.iwaliner.urushi.common.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -45,6 +46,11 @@ public class RopeBlock extends FallingBlock implements SimpleWaterloggedBlock {
         super(p_49795_);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.valueOf(false)).setValue(AXIS, Direction.Axis.Y).setValue(GRAVITY, Boolean.valueOf(false)).setValue(HANGING, Boolean.valueOf(false)));
 
+    }
+
+    @Override
+    protected MapCodec<? extends FallingBlock> codec() {
+        return null;
     }
 
     @Override

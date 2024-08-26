@@ -7,9 +7,13 @@ import com.iwaliner.urushi.core.util.interfaces.ElementBlock;
 import com.iwaliner.urushi.core.util.interfaces.Mirror;
 import com.iwaliner.urushi.core.util.interfaces.ReiryokuStorable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,8 +32,9 @@ public abstract class AbstractReiryokuStorableBlockEntity extends BlockEntity im
         }
 
     /**保存してあるデータを読み取る*/
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
         this.storedReiryoku = tag.getInt("storedReiryoku");
         this.receiveWaitingTime = tag.getInt("receiveWaitingTime");
         this.receiveAmount = tag.getInt("receiveAmount");
@@ -37,8 +42,8 @@ public abstract class AbstractReiryokuStorableBlockEntity extends BlockEntity im
     }
 
     /**データを保存する*/
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
         tag.putInt("storedReiryoku", this.storedReiryoku);
         tag.putInt("receiveWaitingTime", this.receiveWaitingTime);
         tag.putInt("receiveAmount", this.receiveAmount);

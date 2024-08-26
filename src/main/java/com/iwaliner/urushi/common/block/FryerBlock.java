@@ -4,6 +4,7 @@ package com.iwaliner.urushi.common.block;
 import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.common.blockentity.AbstractFryerBlockEntity;
 import com.iwaliner.urushi.common.blockentity.FryerBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 
@@ -46,6 +47,10 @@ public class FryerBlock extends BaseEntityBlock {
 
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
 
 
     @Override
@@ -89,12 +94,12 @@ public class FryerBlock extends BaseEntityBlock {
     }
 
     public void setPlacedBy(Level p_48694_, BlockPos p_48695_, BlockState p_48696_, LivingEntity p_48697_, ItemStack p_48698_) {
-        if (p_48698_.hasCustomHoverName()) {
-            BlockEntity blockentity = p_48694_.getBlockEntity(p_48695_);
-            if (blockentity instanceof AbstractFryerBlockEntity) {
-                ((AbstractFryerBlockEntity)blockentity).setCustomName(p_48698_.getHoverName());
-            }
-        }
+//        if (p_48698_.hasCustomHoverName()) {
+//            BlockEntity blockentity = p_48694_.getBlockEntity(p_48695_);
+//            if (blockentity instanceof AbstractFryerBlockEntity) {
+//                ((AbstractFryerBlockEntity)blockentity).setCustomName(p_48698_.getHoverName());
+//            }
+//        }
 
     }
 

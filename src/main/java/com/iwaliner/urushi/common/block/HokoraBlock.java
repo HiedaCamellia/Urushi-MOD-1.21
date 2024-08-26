@@ -7,6 +7,7 @@ import com.iwaliner.urushi.core.util.ElementUtils;
 import com.iwaliner.urushi.core.util.UrushiUtils;
 import com.iwaliner.urushi.core.util.interfaces.ElementBlock;
 import com.iwaliner.urushi.core.util.interfaces.Tiered;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,7 +16,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -77,6 +80,11 @@ public class HokoraBlock extends BaseEntityBlock implements Tiered, ElementBlock
         return   new HokoraBlockEntity(pos,state);
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
     public RenderShape getRenderShape(BlockState p_49090_) {
         return RenderShape.MODEL;
     }
@@ -103,7 +111,7 @@ public class HokoraBlock extends BaseEntityBlock implements Tiered, ElementBlock
 
 
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list,"hokora");
         UrushiUtils.setInfoWithColor(list,string, ChatFormatting.YELLOW);
     }
@@ -118,10 +126,10 @@ public class HokoraBlock extends BaseEntityBlock implements Tiered, ElementBlock
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-        if(world.getBlockEntity(pos)instanceof HokoraBlockEntity) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if(level.getBlockEntity(pos)instanceof HokoraBlockEntity) {
             if(!player.isSuppressingBounce()){
-                HokoraBlockEntity  tileEntity= (HokoraBlockEntity) world.getBlockEntity(pos);
+                HokoraBlockEntity  tileEntity= (HokoraBlockEntity) level.getBlockEntity(pos);
                 ItemStack heldStack=player.getItemInHand(hand);
                 ItemStack insertStack=heldStack.copy();
                 insertStack.setCount(1);
@@ -129,29 +137,29 @@ public class HokoraBlock extends BaseEntityBlock implements Tiered, ElementBlock
                     tileEntity.setItem(0,insertStack);
                     tileEntity.markUpdated();
                     heldStack.shrink(1);
-                    world.playSound((Player) null,pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS,30F,10F);
-                    return InteractionResult.SUCCESS;
+                    level.playSound((Player) null,pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS,30F,10F);
+                    return ItemInteractionResult.SUCCESS;
                 }else if(!tileEntity.isEmpty()){
                     ItemStack pickedStack = tileEntity.pickItem().copy();
                     if (heldStack.isEmpty()) {
                         tileEntity.markUpdated();
                         player.setItemInHand(hand, pickedStack);
-                        world.playSound((Player) null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 30F, 10F);
-                        return InteractionResult.SUCCESS;
+                        level.playSound((Player) null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 30F, 10F);
+                        return ItemInteractionResult.SUCCESS;
                     } else if (!player.getInventory().add(pickedStack)) {
                         tileEntity.markUpdated();
                         player.drop(pickedStack, false);
-                        world.playSound((Player) null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 30F, 10F);
-                        return InteractionResult.SUCCESS;
+                        level.playSound((Player) null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 30F, 10F);
+                        return ItemInteractionResult.SUCCESS;
                     }
-                }else if(!world.isClientSide()) {
+                }else if(!level.isClientSide()) {
                         player.displayClientMessage(ElementUtils.getStoredReiryokuDisplayMessage(tileEntity.getStoredReiryoku(), tileEntity.getReiryokuCapacity(), tileEntity.getStoredElementType()), true);
                     }
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }
 
 
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 }

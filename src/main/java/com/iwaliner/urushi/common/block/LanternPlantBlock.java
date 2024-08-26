@@ -2,12 +2,14 @@ package com.iwaliner.urushi.common.block;
 
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.registries.TagUrushi;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -44,6 +46,11 @@ public class LanternPlantBlock extends BushBlock {
     }
 
     @Override
+    protected MapCodec<? extends BushBlock> codec() {
+        return null;
+    }
+
+    @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
        if(random.nextInt(10)==0){
            if(state.getValue(AGE)==Integer.valueOf(0)){
@@ -62,12 +69,12 @@ public class LanternPlantBlock extends BushBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
      if(state.getValue(AGE)==Integer.valueOf(1)){
          level.setBlockAndUpdate(pos,state.setValue(LIT,Boolean.valueOf(true)));
-         return InteractionResult.SUCCESS;
+         return ItemInteractionResult.SUCCESS;
      }
-     return InteractionResult.FAIL;
+     return ItemInteractionResult.FAIL;
     }
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_49915_) {
@@ -78,8 +85,8 @@ public class LanternPlantBlock extends BushBlock {
     }
     public boolean canSurvive(BlockState p_51028_, LevelReader p_51029_, BlockPos p_51030_) {
         BlockPos blockpos = p_51030_.below();
-        if (p_51028_.getBlock() == this) //Forge: This function is called during world gen and placement, before this block is set, so if we are not 'here' then assume it's the pre-check.
-            return p_51029_.getBlockState(blockpos).canSustainPlant(p_51029_, blockpos, Direction.UP, this);
+//        if (p_51028_.getBlock() == this) //Forge: This function is called during world gen and placement, before this block is set, so if we are not 'here' then assume it's the pre-check.
+//            return p_51029_.getBlockState(blockpos).canSustainPlant(p_51029_, blockpos, Direction.UP, this);
         return this.mayPlaceOn(p_51029_.getBlockState(blockpos), p_51029_, blockpos);
     }
     @Override

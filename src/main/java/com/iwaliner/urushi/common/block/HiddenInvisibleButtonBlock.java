@@ -1,6 +1,7 @@
 package com.iwaliner.urushi.common.block;
 
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +24,12 @@ public class HiddenInvisibleButtonBlock extends FaceAttachedHorizontalDirectiona
         super(p_49795_);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWERED, Boolean.valueOf(false)).setValue(FACE, AttachFace.WALL));
     }
+
+    @Override
+    protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+        return null;
+    }
+
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_51101_) {
         p_51101_.add(FACING, POWERED, FACE);
     }

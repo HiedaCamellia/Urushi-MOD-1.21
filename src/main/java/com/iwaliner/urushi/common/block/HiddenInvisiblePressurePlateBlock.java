@@ -2,6 +2,7 @@ package com.iwaliner.urushi.common.block;
 
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.sensing.Sensing;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -14,7 +15,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class HiddenInvisiblePressurePlateBlock extends PressurePlateBlock {
     public HiddenInvisiblePressurePlateBlock(Properties p_49795_) {
-        super(Sensitivity.MOBS,p_49795_, BlockSetType.STONE);
+        super(BlockSetType.STONE, p_49795_);
      }
 
     public ItemStack getCloneItemStack(BlockGetter p_152966_, BlockPos p_152967_, BlockState p_152968_) {

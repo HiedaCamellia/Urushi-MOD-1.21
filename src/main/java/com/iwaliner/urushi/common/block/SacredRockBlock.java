@@ -6,13 +6,16 @@ import com.iwaliner.urushi.core.util.ElementUtils;
 import com.iwaliner.urushi.core.util.UrushiUtils;
 import com.iwaliner.urushi.core.util.interfaces.ElementBlock;
 import com.iwaliner.urushi.core.util.interfaces.Tiered;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
  
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -71,6 +74,11 @@ public class SacredRockBlock extends BaseEntityBlock implements Tiered, ElementB
         return   new SacredRockBlockEntity(pos,state);
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
     public RenderShape getRenderShape(BlockState p_49090_) {
         return RenderShape.MODEL;
     }
@@ -97,7 +105,7 @@ public class SacredRockBlock extends BaseEntityBlock implements Tiered, ElementB
 
 
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         //UrushiUtils.setInfo(list,"sacred_rock1");
         UrushiUtils.setInfo(list,"sacred_rock2");
         UrushiUtils.setInfo(list,"sacred_rock3");
@@ -113,14 +121,14 @@ public class SacredRockBlock extends BaseEntityBlock implements Tiered, ElementB
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if(level.getBlockEntity(pos) instanceof SacredRockBlockEntity&&!player.isSuppressingBounce()){
             SacredRockBlockEntity blockEntity= (SacredRockBlockEntity) level.getBlockEntity(pos);
             if(!level.isClientSide()) {
                 player.displayClientMessage(ElementUtils.getStoredReiryokuDisplayMessage(blockEntity.getStoredReiryoku(), blockEntity.getReiryokuCapacity(), blockEntity.getStoredElementType()), true);
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
 }

@@ -27,7 +27,8 @@ public class MagmaStairBlock extends StairBlock {
         super(p_56862_, p_56863_);
     }
     public void stepOn(Level p_153777_, BlockPos p_153778_, BlockState p_153779_, Entity p_153780_) {
-        if (!p_153780_.fireImmune() && p_153780_ instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)p_153780_)) {
+        if (!p_153780_.fireImmune() && p_153780_ instanceof LivingEntity ) {
+            //if (!p_153780_.fireImmune() && p_153780_ instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)p_153780_)) {
             p_153780_.hurt(p_153780_.damageSources().hotFloor(), 1.0F);
         }
 

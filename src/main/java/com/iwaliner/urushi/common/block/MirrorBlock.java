@@ -5,13 +5,16 @@ import com.iwaliner.urushi.common.blockentity.MirrorBlockEntity;
 import com.iwaliner.urushi.core.util.ComplexDirection;
 import com.iwaliner.urushi.core.util.UrushiUtils;
 import com.iwaliner.urushi.core.util.interfaces.Tiered;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
  
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -88,11 +91,16 @@ public class MirrorBlock extends BaseEntityBlock implements Tiered {
         return new MirrorBlockEntity(pos, state);
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
     public RenderShape getRenderShape(BlockState p_49090_) {
         return RenderShape.MODEL;
     }
     @Override
-    public void appendHoverText(ItemStack p_49816_, @Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list, "mirror1");
         UrushiUtils.setInfo(list, "mirror2");
         UrushiUtils.setInfo(list, "mirror3");
@@ -105,13 +113,13 @@ public class MirrorBlock extends BaseEntityBlock implements Tiered {
         return createTickerHelper(p_152162_, BlockEntityRegister.Mirror.get(), MirrorBlockEntity::tick);
     }
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         ComplexDirection complexDirection=MirrorBlockEntity.getDirectionFromID(state.getValue(MirrorBlock.DIRECTION));
         if (level.getBlockEntity(pos) instanceof MirrorBlockEntity) {
 
                 if(!player.isSuppressingBounce()){
                     level.setBlockAndUpdate(pos, state.setValue(DIRECTION, state.getValue(DIRECTION) > 15 ? 1 : state.getValue(DIRECTION) + 1));
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }else if(canFaceAbove(complexDirection)){
                     ComplexDirection newDirection=ComplexDirection.FAIL;
                     if(complexDirection==ComplexDirection.N||complexDirection==ComplexDirection.S){
@@ -147,15 +155,15 @@ public class MirrorBlock extends BaseEntityBlock implements Tiered {
                     }else if(complexDirection==ComplexDirection.W_AW){
                         newDirection=ComplexDirection.E;
                     }else{
-                        return InteractionResult.FAIL;
+                        return ItemInteractionResult.FAIL;
                     }
 
                     level.setBlockAndUpdate(pos, state.setValue(DIRECTION, newDirection.getID()));
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }
 
         }
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
     private  boolean canFaceAbove(ComplexDirection direction){
         return direction==ComplexDirection.N||direction==ComplexDirection.N_AN||direction==ComplexDirection.AN||direction==ComplexDirection.A_AN||

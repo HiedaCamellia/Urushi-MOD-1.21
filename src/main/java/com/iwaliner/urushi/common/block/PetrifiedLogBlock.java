@@ -3,6 +3,7 @@ package com.iwaliner.urushi.common.block;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.core.util.UrushiUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -14,7 +15,7 @@ public class PetrifiedLogBlock extends HorizonalRotateBlock{
         super(p_i48377_1_);
     }
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         if(this== ItemAndBlockRegister.petrified_log_with_wood_amber.get()){
             UrushiUtils.setInfo(list,"petrified_log_with_wood_amber");
         }else if(this== ItemAndBlockRegister.petrified_log_with_fire_amber.get()){

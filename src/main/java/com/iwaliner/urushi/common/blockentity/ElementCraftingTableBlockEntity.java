@@ -1,5 +1,6 @@
 package com.iwaliner.urushi.common.blockentity;
 
+import com.iwaliner.urushi.core.recipe.ElementInput;
 import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.common.block.ElementCraftingTableBlock;
 import com.iwaliner.urushi.common.block.SanboBlock;
@@ -9,11 +10,14 @@ import com.iwaliner.urushi.core.util.ElementType;
 import com.iwaliner.urushi.core.util.interfaces.ReiryokuImportable;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +26,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
 
 public class ElementCraftingTableBlockEntity extends AbstractReiryokuStorableBlockEntity implements ReiryokuImportable {
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
@@ -32,17 +38,14 @@ public class ElementCraftingTableBlockEntity extends AbstractReiryokuStorableBlo
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
         this.coolTime = tag.getInt("coolTime");
-
     }
 
-    @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
         tag.putInt("coolTime", this.coolTime);
-
     }
 
     @Override
@@ -101,7 +104,7 @@ public class ElementCraftingTableBlockEntity extends AbstractReiryokuStorableBlo
 
 
                SimpleContainer container = new SimpleContainer(northStack, eastStack, southStack, westStack);
-               Recipe<?> recipe = level.getRecipeManager().getRecipeFor((RecipeType<AbstractElementCraftingRecipe>) elementCraftingTable.getRecipeType(), container, level).orElse(null);
+               Recipe<?> recipe = level.getRecipeManager().getRecipeFor((RecipeType<AbstractElementCraftingRecipe>) elementCraftingTable.getRecipeType(),new ElementInput(List.of(northStack, eastStack, southStack, westStack)), level).orElse(null).value();
                if (recipe != null
                        //&& northSanboTier == elementCraftingTableTier && eastSanboTier == elementCraftingTableTier && southSanboTier == elementCraftingTableTier && westSanboTier == elementCraftingTableTier
               ) {
@@ -137,20 +140,20 @@ public class ElementCraftingTableBlockEntity extends AbstractReiryokuStorableBlo
         return this.getStoredElementType();
     }
 
-    @Override
-    public void setRecipeUsed(@org.jetbrains.annotations.Nullable Recipe<?> recipe) {
-        if (recipe != null) {
-            ResourceLocation resourcelocation = recipe.getId();
-            this.recipesUsed.addTo(resourcelocation, 1);
-        }
-    }
-
-    @org.jetbrains.annotations.Nullable
-    @Override
-    public Recipe<?> getRecipeUsed() {
-        ElementCraftingTableBlock elementCraftingTableBlock= (ElementCraftingTableBlock) this.getBlockState().getBlock();
-        return (Recipe<?>)elementCraftingTableBlock.getRecipeType();
-    }
+//    @Override
+//    public void setRecipeUsed(@org.jetbrains.annotations.Nullable Recipe<?> recipe) {
+//        if (recipe != null) {
+//            ResourceLocation resourcelocation = recipe.getId();
+//            this.recipesUsed.addTo(resourcelocation, 1);
+//        }
+//    }
+//
+//    @org.jetbrains.annotations.Nullable
+//    @Override
+//    public Recipe<?> getRecipeUsed() {
+//        ElementCraftingTableBlock elementCraftingTableBlock= (ElementCraftingTableBlock) this.getBlockState().getBlock();
+//        return (Recipe<?>)elementCraftingTableBlock.getRecipeType();
+//    }
     private int getMaxCooltime(){
         return 60;
     }

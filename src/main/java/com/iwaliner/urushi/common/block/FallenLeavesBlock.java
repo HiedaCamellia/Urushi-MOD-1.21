@@ -87,13 +87,13 @@ public class FallenLeavesBlock extends CarpetBlock {
             if(random.nextInt(amount)==0) {
                 ParticleOptions particle=null;
                 if (state.getBlock() == ItemAndBlockRegister.fallen_red_leaves.get()) {
-                    particle= ParticleRegister.FallingRedLeaves.get();
+                    particle= (ParticleOptions) ParticleRegister.FallingRedLeaves.get();
                 }else if (state.getBlock() == ItemAndBlockRegister.fallen_orange_leaves.get()) {
-                    particle=ParticleRegister.FallingOrangeLeaves.get();
+                    particle= (ParticleOptions) ParticleRegister.FallingOrangeLeaves.get();
                 }else if (state.getBlock() == ItemAndBlockRegister.fallen_yellow_leaves.get()) {
-                    particle=ParticleRegister.FallingYellowLeaves.get();
+                    particle= (ParticleOptions) ParticleRegister.FallingYellowLeaves.get();
                 }else if (state.getBlock() == ItemAndBlockRegister.fallen_sakura_leaves.get()) {
-                    particle=ParticleRegister.FallingSakuraLeaves.get();
+                    particle= (ParticleOptions) ParticleRegister.FallingSakuraLeaves.get();
                 }
                 double d0 = (double)pos.getX() + random.nextDouble();
                 double d1 = (double)pos.getY() - 0.05D;

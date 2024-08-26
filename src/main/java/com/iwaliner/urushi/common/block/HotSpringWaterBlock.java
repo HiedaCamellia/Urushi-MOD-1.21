@@ -22,7 +22,7 @@ import net.minecraft.util.RandomSource;
 public class HotSpringWaterBlock extends LiquidBlock {
 
     public HotSpringWaterBlock(java.util.function.Supplier<? extends FlowingFluid> p_54694_, BlockBehaviour.Properties p_54695_) {
-        super(p_54694_,p_54695_);
+        super(p_54694_.get(),p_54695_);
     }
 
     @Override

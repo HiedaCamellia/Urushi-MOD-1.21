@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 
 public class FlammableFenceGateBlock extends FenceGateBlock {
     public FlammableFenceGateBlock(Properties p_53356_) {
-        super(p_53356_, WoodType.OAK);
+        super(WoodType.OAK, p_53356_);
     }
     @Override
     public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {

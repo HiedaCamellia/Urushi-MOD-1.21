@@ -3,6 +3,7 @@ package com.iwaliner.urushi.common.block;
 import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.common.blockentity.SenryoubakoBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -46,13 +48,19 @@ public class SenryoubakoBlock extends BaseEntityBlock {
         super(p_i49996_1_);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OPEN, Boolean.valueOf(false)));
     }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
     public boolean useShapeForLightOcclusion(BlockState p_220074_1_) {
         return true;
     }
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else {
             BlockEntity blockentity = level.getBlockEntity(pos);
             if (blockentity instanceof SenryoubakoBlockEntity) {
@@ -60,7 +68,7 @@ public class SenryoubakoBlock extends BaseEntityBlock {
                 player.awardStat(Stats.OPEN_SHULKER_BOX);
             }
 
-            return InteractionResult.CONSUME;
+            return ItemInteractionResult.CONSUME;
         }
     }
     @Override
@@ -96,12 +104,13 @@ public class SenryoubakoBlock extends BaseEntityBlock {
     }
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            BlockEntity tileentity = level.getBlockEntity(pos);
-            if (tileentity instanceof SenryoubakoBlockEntity) {
-                ((SenryoubakoBlockEntity)tileentity).setCustomName(stack.getHoverName());
-            }
-        }    }
+//        if (stack.hasCustomHoverName()) {
+//            BlockEntity tileentity = level.getBlockEntity(pos);
+//            if (tileentity instanceof SenryoubakoBlockEntity) {
+//                ((SenryoubakoBlockEntity)tileentity).setCustomName(stack.getHoverName());
+//            }
+//        }
+    }
 
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
@@ -133,16 +142,16 @@ public class SenryoubakoBlock extends BaseEntityBlock {
 
 
 
-    public void playerWillDestroy(Level p_56212_, BlockPos p_56213_, BlockState p_56214_, Player p_56215_) {
+    public BlockState playerWillDestroy(Level p_56212_, BlockPos p_56213_, BlockState p_56214_, Player p_56215_) {
         BlockEntity blockentity = p_56212_.getBlockEntity(p_56213_);
         if (blockentity instanceof SenryoubakoBlockEntity) {
             SenryoubakoBlockEntity shulkerboxblockentity = (SenryoubakoBlockEntity)blockentity;
             if (!p_56212_.isClientSide && p_56215_.isCreative() && !shulkerboxblockentity.isEmpty()) {
                 ItemStack itemstack =new ItemStack(ItemAndBlockRegister.senryoubako.get());
-                blockentity.saveToItem(itemstack);
-                if (shulkerboxblockentity.hasCustomName()) {
-                    itemstack.setHoverName(shulkerboxblockentity.getCustomName());
-                }
+//                blockentity.saveToItem(itemstack);
+//                if (shulkerboxblockentity.hasCustomName()) {
+//                    itemstack.setHoverName(shulkerboxblockentity.getCustomName());
+//                }
 
                 ItemEntity itementity = new ItemEntity(p_56212_, (double)p_56213_.getX() + 0.5D, (double)p_56213_.getY() + 0.5D, (double)p_56213_.getZ() + 0.5D, itemstack);
                 itementity.setDefaultPickUpDelay();
@@ -153,6 +162,7 @@ public class SenryoubakoBlock extends BaseEntityBlock {
         }
 
         super.playerWillDestroy(p_56212_, p_56213_, p_56214_, p_56215_);
+        return p_56214_;
     }
 
     public List<ItemStack> getDrops(BlockState p_56246_, LootParams.Builder p_56247_) {
@@ -175,9 +185,9 @@ public class SenryoubakoBlock extends BaseEntityBlock {
         return PushReaction.DESTROY;
     }
     public ItemStack getCloneItemStack(BlockGetter p_56202_, BlockPos p_56203_, BlockState p_56204_) {
-        ItemStack itemstack = super.getCloneItemStack(p_56202_, p_56203_, p_56204_);
+        ItemStack itemstack = super.getCloneItemStack((LevelReader) p_56202_, p_56203_, p_56204_);
         p_56202_.getBlockEntity(p_56203_, BlockEntityRegister.SenryoubakoBlockEntity.get()).ifPresent((p_187446_) -> {
-            p_187446_.saveToItem(itemstack);
+//            p_187446_.saveToItem(itemstack);
         });
         return itemstack;
     }

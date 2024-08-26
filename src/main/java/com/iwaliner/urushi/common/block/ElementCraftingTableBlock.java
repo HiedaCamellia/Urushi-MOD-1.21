@@ -8,11 +8,14 @@ import com.iwaliner.urushi.core.util.ElementUtils;
 import com.iwaliner.urushi.core.util.UrushiUtils;
 import com.iwaliner.urushi.core.util.interfaces.ElementBlock;
 import com.iwaliner.urushi.core.util.interfaces.Tiered;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
@@ -61,11 +64,17 @@ public class ElementCraftingTableBlock extends BaseEntityBlock implements Tiered
         return new ElementCraftingTableBlockEntity(pos, state);
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
     public RenderShape getRenderShape(BlockState p_49090_) {
         return RenderShape.MODEL;
     }
+
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list, "element_crafting_table1");
         UrushiUtils.setInfo(list, "element_crafting_table2");
     }
@@ -80,7 +89,7 @@ public class ElementCraftingTableBlock extends BaseEntityBlock implements Tiered
         return createTickerHelper(p_152162_, BlockEntityRegister.ElementCraftingTable.get(), ElementCraftingTableBlockEntity::tick);
     }
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof ElementCraftingTableBlockEntity &&!player.isSuppressingBounce()) {
             ElementCraftingTableBlockEntity blockEntity = (ElementCraftingTableBlockEntity) level.getBlockEntity(pos);
             if(player.getItemInHand(hand).getItem()== Items.BARRIER){
@@ -89,10 +98,10 @@ public class ElementCraftingTableBlock extends BaseEntityBlock implements Tiered
             if(!level.isClientSide()) {
                 player.displayClientMessage(ElementUtils.getStoredReiryokuDisplayMessage(blockEntity.getStoredReiryoku(), blockEntity.getReiryokuCapacity(), blockEntity.getStoredElementType()), true);
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
 
         }
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
     public RecipeType<? extends AbstractElementCraftingRecipe> getRecipeType(){
         return recipe.get();

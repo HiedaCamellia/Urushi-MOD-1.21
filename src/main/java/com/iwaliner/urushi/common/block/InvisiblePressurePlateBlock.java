@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 public class InvisiblePressurePlateBlock extends PressurePlateBlock implements EntityBlock {
     public InvisiblePressurePlateBlock(Properties p_57060_) {
-        super(Sensitivity.MOBS,p_57060_, BlockSetType.STONE);
+        super(BlockSetType.STONE, p_57060_);
     }
     @org.jetbrains.annotations.Nullable
     @Override

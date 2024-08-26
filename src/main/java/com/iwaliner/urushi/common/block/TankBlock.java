@@ -8,13 +8,16 @@ import com.iwaliner.urushi.core.util.ElementUtils;
 import com.iwaliner.urushi.core.util.UrushiUtils;
 import com.iwaliner.urushi.core.util.interfaces.ElementBlock;
 import com.iwaliner.urushi.core.util.interfaces.Tiered;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -68,11 +71,16 @@ public class TankBlock extends BaseEntityBlock implements Tiered, ElementBlock {
         return new TankBlockEntity(pos, state);
     }
 
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
     public RenderShape getRenderShape(BlockState p_49090_) {
         return RenderShape.MODEL;
     }
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list, "tank1");
         UrushiUtils.setInfo(list, "tank2");
     }
@@ -87,10 +95,9 @@ public class TankBlock extends BaseEntityBlock implements Tiered, ElementBlock {
         return createTickerHelper(p_152162_, BlockEntityRegister.Tank.get(), TankBlockEntity::tick);
     }
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof TankBlockEntity&&!player.isSuppressingBounce()) {
             TankBlockEntity blockEntity = (TankBlockEntity) level.getBlockEntity(pos);
-            ItemStack stack=player.getItemInHand(hand);
             if(stack.getItem() instanceof AbstractMagatamaItem){
                 int blockEntityStoredReiryoku=blockEntity.getStoredReiryoku();
                 int magatamaStoredReiryoku=ElementUtils.getStoredReiryokuAmount(stack);
@@ -102,11 +109,11 @@ public class TankBlock extends BaseEntityBlock implements Tiered, ElementBlock {
                     if (blockEntityStoredReiryoku >= i1) {
                         ElementUtils.increaseStoredReiryokuAmount(stack, i1);
                         blockEntity.decreaseStoredReiryoku(i1);
-                        return InteractionResult.SUCCESS;
+                        return ItemInteractionResult.SUCCESS;
                     } else {
                         ElementUtils.increaseStoredReiryokuAmount(stack, blockEntityStoredReiryoku);
                         blockEntity.decreaseStoredReiryoku(blockEntityStoredReiryoku);
-                        return InteractionResult.SUCCESS;
+                        return ItemInteractionResult.SUCCESS;
                     }
                 }
             }else {
@@ -114,10 +121,10 @@ public class TankBlock extends BaseEntityBlock implements Tiered, ElementBlock {
                 if (!level.isClientSide()) {
                     player.displayClientMessage(ElementUtils.getStoredReiryokuDisplayMessage(blockEntity.getStoredReiryoku(), blockEntity.getReiryokuCapacity(), blockEntity.getStoredElementType()), true);
                 }
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
     public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
         return true;

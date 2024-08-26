@@ -2,15 +2,13 @@ package com.iwaliner.urushi.common.block;
 
 
 import com.iwaliner.urushi.common.blockentity.WoodenCabinetrySlabBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.Container;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -51,9 +49,15 @@ public class WoodenCabinetrySlabBlock extends BaseEntityBlock implements SimpleW
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand p_60507_, BlockHitResult p_60508_) {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+
         if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else {
             BlockEntity blockentity = level.getBlockEntity(pos);
             if (blockentity instanceof WoodenCabinetrySlabBlockEntity) {
@@ -61,7 +65,7 @@ public class WoodenCabinetrySlabBlock extends BaseEntityBlock implements SimpleW
                 player.awardStat(Stats.OPEN_BARREL);
             }
 
-            return InteractionResult.CONSUME;
+            return ItemInteractionResult.CONSUME;
         }
     }
 
@@ -103,12 +107,13 @@ public class WoodenCabinetrySlabBlock extends BaseEntityBlock implements SimpleW
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
-            BlockEntity tileentity = level.getBlockEntity(pos);
-            if (tileentity instanceof WoodenCabinetrySlabBlockEntity) {
-                ((WoodenCabinetrySlabBlockEntity)tileentity).setCustomName(stack.getHoverName());
-            }
-        }    }
+//        if (stack.hasCustomHoverName()) {
+//            BlockEntity tileentity = level.getBlockEntity(pos);
+//            if (tileentity instanceof WoodenCabinetrySlabBlockEntity) {
+//                ((WoodenCabinetrySlabBlockEntity)tileentity).setCustomName(stack.getHoverName());
+//            }
+//        }
+    }
 
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
@@ -168,12 +173,12 @@ public class WoodenCabinetrySlabBlock extends BaseEntityBlock implements SimpleW
 
     @Override
     public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
-        return state.getValue(TYPE) != SlabType.DOUBLE ? SimpleWaterloggedBlock.super.placeLiquid(level, pos, state, fluidState) : false;
+        return state.getValue(TYPE) != SlabType.DOUBLE && SimpleWaterloggedBlock.super.placeLiquid(level, pos, state, fluidState);
     }
 
     @Override
-    public boolean canPlaceLiquid(BlockGetter getter, BlockPos pos, BlockState state, Fluid fluid) {
-        return state.getValue(TYPE) != SlabType.DOUBLE ? SimpleWaterloggedBlock.super.canPlaceLiquid(getter, pos, state, fluid) : false;
+    public boolean canPlaceLiquid(@javax.annotation.Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+        return state.getValue(TYPE) != SlabType.DOUBLE && SimpleWaterloggedBlock.super.canPlaceLiquid(player, level, pos, state, fluid);
     }
 
     @Override
@@ -185,18 +190,18 @@ public class WoodenCabinetrySlabBlock extends BaseEntityBlock implements SimpleW
         return super.updateShape(state, direction, state2, levelAccessor, pos, pos2);
     }
 
-    @Override
-    public boolean isPathfindable(BlockState state, BlockGetter getter, BlockPos pos, PathComputationType type) {
-        switch(type) {
-            case LAND:
-                return false;
-            case WATER:
-                return getter.getFluidState(pos).is(FluidTags.WATER);
-            case AIR:
-                return false;
-            default:
-                return false;
-        }
-    }
+//    @Override
+//    public boolean isPathfindable(BlockState state, BlockGetter getter, BlockPos pos, PathComputationType type) {
+//        switch(type) {
+//            case LAND:
+//                return false;
+//            case WATER:
+//                return getter.getFluidState(pos).is(FluidTags.WATER);
+//            case AIR:
+//                return false;
+//            default:
+//                return false;
+//        }
+//    }
 
 }

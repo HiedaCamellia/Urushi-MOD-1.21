@@ -1,5 +1,6 @@
 package com.iwaliner.urushi.common.block;
 
+import com.iwaliner.urushi.block.KakuriyoPortalBlock;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

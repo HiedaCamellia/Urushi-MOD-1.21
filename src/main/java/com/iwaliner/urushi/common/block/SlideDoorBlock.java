@@ -10,7 +10,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -144,12 +143,14 @@ public class SlideDoorBlock extends Block {
         } }
 
     @Override
-    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player entity) {
+    public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player entity) {
         if (!world.isClientSide && entity.isCreative()) {
             this.preventCreativeDropFromBottomPart(world, pos, state, entity);
         }
 
-        super.playerWillDestroy(world, pos, state, entity); }
+        super.playerWillDestroy(world, pos, state, entity);
+        return state;
+    }
 
 
     protected static void preventCreativeDropFromBottomPart(Level world, BlockPos pos, BlockState state, Player entity) {
@@ -165,19 +166,19 @@ public class SlideDoorBlock extends Block {
 
     }
 
-    @Override
-    public boolean isPathfindable(BlockState state, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType type) {
-        switch(type) {
-            case LAND:
-                return isOpen(state);
-            case WATER:
-                return false;
-            case AIR:
-                return isOpen(state);
-            default:
-                return false;
-        }
-    }
+//    @Override
+//    public boolean isPathfindable(BlockState state, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType type) {
+//        switch(type) {
+//            case LAND:
+//                return isOpen(state);
+//            case WATER:
+//                return false;
+//            case AIR:
+//                return isOpen(state);
+//            default:
+//                return false;
+//        }
+//    }
 
     @org.jetbrains.annotations.Nullable
     @Override
@@ -232,18 +233,18 @@ public class SlideDoorBlock extends Block {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (ConfigUrushi.instantlySlidingDoor.get()) {
             if (state.getValue(OPEN) == 0 ) {
                 world.setBlock(pos, state.setValue(OPEN, 13).setValue(IS_OPENING, state.getValue(OPEN) == 0), 10);
                 world.playSound(player, pos, SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 1.0F, 1.0F);
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return ItemInteractionResult.sidedSuccess(world.isClientSide);
             }else if (state.getValue(OPEN) == 13) {
                 world.setBlock(pos, state.setValue(OPEN, 0).setValue(IS_OPENING, state.getValue(OPEN) == 0), 10);
                 world.playSound(player, pos, SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 1.0F, 1.0F);
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return ItemInteractionResult.sidedSuccess(world.isClientSide);
             }else{
-                return InteractionResult.FAIL;
+                return ItemInteractionResult.FAIL;
             }
         } else {
             if (state.getValue(OPEN) == 0 || state.getValue(OPEN) == 13) {
@@ -253,9 +254,9 @@ public class SlideDoorBlock extends Block {
                 world.scheduleTick(new BlockPos(pos), this, 1);
 
 
-                return InteractionResult.sidedSuccess(world.isClientSide);
+                return ItemInteractionResult.sidedSuccess(world.isClientSide);
             } else {
-                return InteractionResult.FAIL;
+                return ItemInteractionResult.FAIL;
             }
         }
     }

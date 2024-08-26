@@ -2,6 +2,7 @@ package com.iwaliner.urushi.common.block;
 
 import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.common.blockentity.NullBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -15,6 +16,11 @@ import org.jetbrains.annotations.Nullable;
 public class NullBlock extends BaseEntityBlock {
     public NullBlock(Properties p_49795_) {
         super(p_49795_);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
     }
 
     public RenderShape getRenderShape(BlockState p_49090_) {

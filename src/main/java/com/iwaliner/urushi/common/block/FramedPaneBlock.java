@@ -150,10 +150,10 @@ public class FramedPaneBlock extends HorizonalRotateBlock{
     }
     private boolean textureConnection(Player player){
         AtomicBoolean b = new AtomicBoolean(false);
-        player.getCapability(FramedBlockTextureConnectionProvider.FRAMED_BLOCK_TEXTURE_CONNECTION).ifPresent(data -> {
-            b.set(data.isPressed());
-
-        });
+//        player.getCapability(FramedBlockTextureConnectionProvider.FRAMED_BLOCK_TEXTURE_CONNECTION).ifPresent(data -> {
+//            b.set(data.isPressed());
+//
+//        });
         return b.get();
     }
     @Override

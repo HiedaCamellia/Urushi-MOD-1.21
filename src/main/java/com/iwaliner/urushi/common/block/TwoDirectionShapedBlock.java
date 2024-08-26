@@ -33,7 +33,7 @@ public class TwoDirectionShapedBlock extends HorizonalRotateBlock{
         }
     }
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable BlockGetter getter, List<Component> list, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         if(stack.getItem().equals(Item.byBlock(ItemAndBlockRegister.udon.get()))){
             UrushiUtils.setInfo(list, "udon");
         }else  if(stack.getItem().equals(Item.byBlock(ItemAndBlockRegister.alkaline_noodles.get()))){

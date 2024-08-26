@@ -8,7 +8,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -37,28 +39,29 @@ public class UrushiCropBlock extends CropBlock {
         if (p_221051_.getRawBrightness(p_221052_, 0) >= 9) {
             int i = this.getAge(p_221050_);
             if (i < this.getMaxAge()) {
-                float f = getGrowthSpeed(this, p_221051_, p_221052_)*1.5f;
-                if (net.minecraftforge.common.ForgeHooks.onCropsGrowPre(p_221051_, p_221052_, p_221050_, p_221053_.nextInt((int)(25.0F / f) + 1) == 0)) {
-                    p_221051_.setBlock(p_221052_, this.getStateForAge(i + 1), 2);
-                    net.minecraftforge.common.ForgeHooks.onCropsGrowPost(p_221051_, p_221052_, p_221050_);
-                }
+                p_221051_.setBlock(p_221052_, this.getStateForAge(i + 1), 2);
+//                float f = getGrowthSpeed(this, p_221051_, p_221052_)*1.5f;
+//                if (net.minecraftforge.common.ForgeHooks.onCropsGrowPre(p_221051_, p_221052_, p_221050_, p_221053_.nextInt((int)(25.0F / f) + 1) == 0)) {
+//                    p_221051_.setBlock(p_221052_, this.getStateForAge(i + 1), 2);
+//                    net.minecraftforge.common.ForgeHooks.onCropsGrowPost(p_221051_, p_221052_, p_221050_);
+//                }
             }
         }
 
     }
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(state.getBlock() instanceof CropBlock){
             if(world.getBlockState(pos).getValue(AGE)==Integer.valueOf(7)) {
                 world.destroyBlock(pos, true);
                 world.setBlockAndUpdate(pos,this.defaultBlockState());
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list, "crop");
     }
     @Override

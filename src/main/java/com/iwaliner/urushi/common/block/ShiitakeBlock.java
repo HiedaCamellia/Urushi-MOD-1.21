@@ -1,6 +1,7 @@
 package com.iwaliner.urushi.common.block;
 
 import com.iwaliner.urushi.registries.TagUrushi;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
@@ -20,6 +21,12 @@ public class ShiitakeBlock extends BushBlock {
     public ShiitakeBlock(Properties p_51021_) {
         super(p_51021_);
     }
+
+    @Override
+    protected MapCodec<? extends BushBlock> codec() {
+        return null;
+    }
+
     public VoxelShape getShape(BlockState p_54889_, BlockGetter p_54890_, BlockPos p_54891_, CollisionContext p_54892_) {
         return SHAPE;
     }

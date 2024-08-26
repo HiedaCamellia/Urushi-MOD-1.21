@@ -7,7 +7,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,8 +40,8 @@ public class WIndBellBlock extends Block {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-        level.playSound((Player) null,pos, SoundRegister.WindBell.get(), SoundSource.BLOCKS,0.01F,1F+level.random.nextFloat()*0.4F);
-        return InteractionResult.SUCCESS;
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        level.playSound(player,pos, SoundRegister.WindBell.get(), SoundSource.BLOCKS,0.01F,1F+level.random.nextFloat()*0.4F);
+        return ItemInteractionResult.SUCCESS;
     }
 }

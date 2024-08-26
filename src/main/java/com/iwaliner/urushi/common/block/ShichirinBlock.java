@@ -9,6 +9,7 @@ import com.iwaliner.urushi.common.item.AmberIgniterItem;
 import com.iwaliner.urushi.core.util.ElementType;
 import com.iwaliner.urushi.core.util.ElementUtils;
 import com.iwaliner.urushi.core.util.UrushiUtils;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,8 +19,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -58,6 +61,11 @@ public class ShichirinBlock extends BaseEntityBlock  {
     }
 
     @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
+    @Override
     public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
         return SHAPE;
     }
@@ -78,12 +86,12 @@ public class ShichirinBlock extends BaseEntityBlock  {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(world.getBlockEntity(pos)instanceof ShichirinBlockEntity) {
             if(!player.isSuppressingBounce()){
                 ShichirinBlockEntity  tileEntity= (ShichirinBlockEntity) world.getBlockEntity(pos);
                 if(tileEntity==null){
-                    return InteractionResult.FAIL;
+                    return ItemInteractionResult.FAIL;
                 }
                 ItemStack heldStack=player.getItemInHand(hand);
                 ItemStack insertStack=heldStack.copy();
@@ -94,28 +102,28 @@ public class ShichirinBlock extends BaseEntityBlock  {
                         tileEntity.addFire(100);
                         world.setBlockAndUpdate(pos,state.setValue(SHICHIRIN,2));
                         ElementUtils.increaseStoredReiryokuAmount(magatama,-10);
-                        player.getItemInHand(hand).hurtAndBreak(1, player, (x) -> {
-                            x.broadcastBreakEvent(hand);
-                        });
-                        return InteractionResult.SUCCESS;
+//                        player.getItemInHand(hand).hurtAndBreak(1, player, (x) -> {
+//                            x.broadcastBreakEvent(hand);
+//                        });
+                        return ItemInteractionResult.SUCCESS;
                     }
                 }
                 else if(player.getItemInHand(hand).isEmpty()&&tileEntity.getItem(0).isEmpty()&&tileEntity.getItem(1).isEmpty()){
 
-                    return InteractionResult.FAIL;
+                    return ItemInteractionResult.FAIL;
                 }
                 else if(heldStack.is(TagUrushi.SHICHIRIN_FUEL)){
                     ItemStack fuel=tileEntity.getItem(2);
                     if(fuel==ItemStack.EMPTY) {
                         tileEntity.setItem(2, heldStack.copy());
                         heldStack.setCount(0);
-                        return InteractionResult.SUCCESS;
+                        return ItemInteractionResult.SUCCESS;
                     }else if(fuel.getItem()==heldStack.getItem()){
                         int count=fuel.getCount()+heldStack.getCount();
                         ItemStack newStack=new ItemStack(fuel.getItem(), Math.min(count, 64));
                         tileEntity.setItem(2, newStack.copy());
                         heldStack.setCount(count>=64? count-64 : 0);
-                        return InteractionResult.SUCCESS;
+                        return ItemInteractionResult.SUCCESS;
                     }
                 }
                 else if(heldStack.getItem()== ItemAndBlockRegister.uchiwa.get()&&state.getValue(SHICHIRIN)!=0&&state.getValue(SHICHIRIN)!=1){
@@ -123,11 +131,11 @@ public class ShichirinBlock extends BaseEntityBlock  {
                     if(magatama!=ItemStack.EMPTY&&ElementUtils.willBeInDomain(magatama,-1)) {
                         tileEntity.addFire(30);
                         ElementUtils.increaseStoredReiryokuAmount(magatama,-1);
-                        player.getItemInHand(hand).hurtAndBreak(1, player, (x) -> {
-                            x.broadcastBreakEvent(hand);
-                        });
+//                        player.getItemInHand(hand).hurtAndBreak(1, player, (x) -> {
+//                            x.broadcastBreakEvent(hand);
+//                        });
                         world.playSound((Player) null, pos, SoundEvents.ENDER_DRAGON_FLAP, SoundSource.BLOCKS, 0.5F, 1F);
-                        return InteractionResult.SUCCESS;
+                        return ItemInteractionResult.SUCCESS;
                     }
                 }
                 if(tileEntity.canPlaceItem(0,insertStack)){
@@ -135,19 +143,19 @@ public class ShichirinBlock extends BaseEntityBlock  {
                     tileEntity.markUpdated();
                     heldStack.setCount(0);
                     world.playSound((Player) null,pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS,3F,1F);
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }else {
                     ItemStack pickedStack = tileEntity.pickItem().copy();
                     if (heldStack.isEmpty()) {
                         tileEntity.markUpdated();
                         player.setItemInHand(hand, pickedStack);
                         world.playSound((Player) null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 3F, 1F);
-                        return InteractionResult.SUCCESS;
+                        return ItemInteractionResult.SUCCESS;
                     } else if (!player.getInventory().add(pickedStack)) {
                         tileEntity.markUpdated();
                         player.drop(pickedStack, false);
                         world.playSound((Player) null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 3F, 1F);
-                        return InteractionResult.SUCCESS;
+                        return ItemInteractionResult.SUCCESS;
                     }
                 }
             }
@@ -155,7 +163,7 @@ public class ShichirinBlock extends BaseEntityBlock  {
         }
 
 
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
 
 
@@ -178,7 +186,7 @@ public class ShichirinBlock extends BaseEntityBlock  {
 
 
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list,"shichirin1");
         UrushiUtils.setInfo(list,"shichirin2");
         UrushiUtils.setInfo(list,"shichirin3");
@@ -202,12 +210,12 @@ public class ShichirinBlock extends BaseEntityBlock  {
         }
     }
     public void setPlacedBy(Level p_48694_, BlockPos p_48695_, BlockState p_48696_, LivingEntity p_48697_, ItemStack p_48698_) {
-        if (p_48698_.hasCustomHoverName()) {
-            BlockEntity blockentity = p_48694_.getBlockEntity(p_48695_);
-            if (blockentity instanceof ShichirinBlockEntity) {
-                ((ShichirinBlockEntity)blockentity).setCustomName(p_48698_.getHoverName());
-            }
-        }
+//        if (p_48698_.hasCustomHoverName()) {
+//            BlockEntity blockentity = p_48694_.getBlockEntity(p_48695_);
+//            if (blockentity instanceof ShichirinBlockEntity) {
+//                ((ShichirinBlockEntity)blockentity).setCustomName(p_48698_.getHoverName());
+//            }
+//        }
 
     }
 

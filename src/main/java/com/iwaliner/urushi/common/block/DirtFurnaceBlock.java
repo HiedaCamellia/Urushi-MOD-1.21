@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -53,18 +54,18 @@ public class DirtFurnaceBlock extends HorizonalRotateBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(state.getValue(LIT)&&player.getItemInHand(hand).getItem()!= Item.byBlock(ItemAndBlockRegister.rice_cauldron.get())){
             world.setBlockAndUpdate(pos,state.setValue(LIT,Boolean.valueOf(false)));
             world.playSound((Player) null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1F);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }else{
             if(player.getItemInHand(hand).is(TagUrushi.IGNITER)){
                 world.playSound((Player) null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, world.random.nextFloat() * 0.4F + 0.8F);
                 world.setBlockAndUpdate(pos,state.setValue(LIT,Boolean.valueOf(true)));
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }else{
-                return InteractionResult.FAIL;
+                return ItemInteractionResult.FAIL;
             }
         }
     }
@@ -83,10 +84,9 @@ public class DirtFurnaceBlock extends HorizonalRotateBlock {
 
     }
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
-        UrushiUtils.setInfo(list,"dirtfurnace");
-         }
-
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
+        UrushiUtils.setInfo(list, "dirtfurnace");
+    }
 
 
 }

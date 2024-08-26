@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 public class InvisibleButtonBlock extends ButtonBlock implements EntityBlock {
     public InvisibleButtonBlock(Properties p_57060_) {
-        super(p_57060_, BlockSetType.STONE, 20, false);
+        super(BlockSetType.STONE, 20, p_57060_);
     }
     @org.jetbrains.annotations.Nullable
     @Override

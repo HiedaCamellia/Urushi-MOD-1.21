@@ -1,10 +1,12 @@
 package com.iwaliner.urushi.common.block;
 
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
 
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
@@ -35,6 +37,11 @@ public class HorizonalRotateSlabBlock extends HorizontalDirectionalBlock impleme
         super(p_i48377_1_);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(TYPE, SlabType.BOTTOM).setValue(WATERLOGGED, Boolean.valueOf(false)));
 
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return null;
     }
 
     @Override
@@ -84,12 +91,12 @@ public class HorizonalRotateSlabBlock extends HorizontalDirectionalBlock impleme
 
     @Override
     public boolean placeLiquid(LevelAccessor p_56306_, BlockPos p_56307_, BlockState p_56308_, FluidState p_56309_) {
-        return p_56308_.getValue(TYPE) != SlabType.DOUBLE ? SimpleWaterloggedBlock.super.placeLiquid(p_56306_, p_56307_, p_56308_, p_56309_) : false;
+        return p_56308_.getValue(TYPE) != SlabType.DOUBLE && SimpleWaterloggedBlock.super.placeLiquid(p_56306_, p_56307_, p_56308_, p_56309_);
     }
 
     @Override
-    public boolean canPlaceLiquid(BlockGetter p_56301_, BlockPos p_56302_, BlockState p_56303_, Fluid p_56304_) {
-        return p_56303_.getValue(TYPE) != SlabType.DOUBLE ? SimpleWaterloggedBlock.super.canPlaceLiquid(p_56301_, p_56302_, p_56303_, p_56304_) : false;
+    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+        return state.getValue(TYPE) != SlabType.DOUBLE && SimpleWaterloggedBlock.super.canPlaceLiquid(player, level, pos, state, fluid);
     }
 
     @Override
@@ -101,18 +108,18 @@ public class HorizonalRotateSlabBlock extends HorizontalDirectionalBlock impleme
         return super.updateShape(p_60541_, p_60542_, p_60543_, p_60544_, p_60545_, p_60546_);
     }
 
-    @Override
-    public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
-        switch(p_60478_) {
-            case LAND:
-                return false;
-            case WATER:
-                return p_60476_.getFluidState(p_60477_).is(FluidTags.WATER);
-            case AIR:
-                return false;
-            default:
-                return false;
-        } }
+//    @Override
+//    public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
+//        switch(p_60478_) {
+//            case LAND:
+//                return false;
+//            case WATER:
+//                return p_60476_.getFluidState(p_60477_).is(FluidTags.WATER);
+//            case AIR:
+//                return false;
+//            default:
+//                return false;
+//        } }
 
 
 }

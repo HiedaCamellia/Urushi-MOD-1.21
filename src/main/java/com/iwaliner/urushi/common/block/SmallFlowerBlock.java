@@ -1,10 +1,12 @@
 package com.iwaliner.urushi.common.block;
 
 import com.iwaliner.urushi.core.util.UrushiUtils;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -31,6 +33,11 @@ public class SmallFlowerBlock extends BushBlock implements BonemealableBlock {
         super(p_53514_);
     }
 
+    @Override
+    protected MapCodec<? extends BushBlock> codec() {
+        return null;
+    }
+
     public VoxelShape getShape(BlockState p_53517_, BlockGetter p_53518_, BlockPos p_53519_, CollisionContext p_53520_) {
         Vec3 vec3 = p_53517_.getOffset(p_53518_, p_53519_);
         return SHAPE.move(vec3.x, vec3.y, vec3.z);
@@ -44,8 +51,8 @@ public class SmallFlowerBlock extends BushBlock implements BonemealableBlock {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader p_256559_, BlockPos p_50898_, BlockState p_50899_, boolean p_50900_) {
-        return true;
+    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        return false;
     }
 
     public boolean isBonemealSuccess(Level p_57308_, RandomSource p_57309_, BlockPos p_57310_, BlockState p_57311_) {
@@ -56,7 +63,7 @@ public class SmallFlowerBlock extends BushBlock implements BonemealableBlock {
         popResource(p_57298_, p_57300_, new ItemStack(this));
     }
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list,"small_flower");
     }
     @Override

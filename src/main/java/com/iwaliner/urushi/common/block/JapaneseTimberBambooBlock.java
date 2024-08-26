@@ -104,7 +104,7 @@ public class JapaneseTimberBambooBlock extends Block {
     @Override
     public boolean canSurvive(BlockState state, LevelReader iWorldReader, BlockPos pos) {
         BlockState soil = iWorldReader.getBlockState(pos.below());
-        if (soil.canSustainPlant(iWorldReader, pos.below(), Direction.UP, this)) return true;
+        if (soil.canSustainPlant(iWorldReader, pos.below(), Direction.UP, this.defaultBlockState()).isDefault()) return true;
         BlockState blockstate = iWorldReader.getBlockState(pos.below());
 
         if (blockstate.getBlock() == this) {

@@ -12,7 +12,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -98,7 +100,7 @@ public class KakejikuBlock extends HorizonalRotateBlock{
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(nextBlock==null){
             nextBlock= ItemAndBlockRegister.kakejiku_1.get();
         }
@@ -109,15 +111,15 @@ public class KakejikuBlock extends HorizonalRotateBlock{
                 world.setBlock(pos.above(), nextBlock.defaultBlockState().setValue(FACING, direction).setValue(BOTTOM, Boolean.valueOf(false)),2);
                 world.setBlock(pos, nextBlock.defaultBlockState().setValue(FACING, direction).setValue(BOTTOM, Boolean.valueOf(true)),2);
                 world.playSound((Player) null, pos, SoundEvents.ENDER_DRAGON_FLAP, SoundSource.BLOCKS, 1F, 1F);
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             } else {
                 world.setBlock(pos.below(), nextBlock.defaultBlockState().setValue(FACING, direction).setValue(BOTTOM, Boolean.valueOf(true)),2);
                 world.setBlock(pos, nextBlock.defaultBlockState().setValue(FACING, direction).setValue(BOTTOM, Boolean.valueOf(false)),2);
                 world.playSound((Player) null, pos, SoundEvents.ENDER_DRAGON_FLAP, SoundSource.BLOCKS, 1F, 1F);
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
 
     @Override
@@ -125,7 +127,7 @@ public class KakejikuBlock extends HorizonalRotateBlock{
         p_49915_.add(FACING,BOTTOM);
     }
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         list.add((Component.translatable("info.urushi.kakejiku" )).withStyle(ChatFormatting.GRAY));
     }
     @Override

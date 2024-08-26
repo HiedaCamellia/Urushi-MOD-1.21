@@ -12,6 +12,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -38,12 +39,12 @@ public class UrushiHopperBlock extends HopperBlock {
         return p_153378_.isClientSide ? null : createTickerHelper(p_153380_, BlockEntityRegister.UrushiHopper.get(), UrushiHopperBlockEntity::pushItemsTick);
     }
     public void setPlacedBy(Level p_54049_, BlockPos p_54050_, BlockState p_54051_, LivingEntity p_54052_, ItemStack p_54053_) {
-        if (p_54053_.hasCustomHoverName()) {
-            BlockEntity blockentity = p_54049_.getBlockEntity(p_54050_);
-            if (blockentity instanceof UrushiHopperBlockEntity) {
-                ((UrushiHopperBlockEntity)blockentity).setCustomName(p_54053_.getHoverName());
-            }
-        }
+//        if (p_54053_.hasCustomHoverName()) {
+//            BlockEntity blockentity = p_54049_.getBlockEntity(p_54050_);
+//            if (blockentity instanceof UrushiHopperBlockEntity) {
+//                ((UrushiHopperBlockEntity)blockentity).setCustomName(p_54053_.getHoverName());
+//            }
+//        }
 
     }
     public InteractionResult use(BlockState p_54071_, Level p_54072_, BlockPos p_54073_, Player p_54074_, InteractionHand p_54075_, BlockHitResult p_54076_) {
@@ -78,7 +79,7 @@ public class UrushiHopperBlock extends HopperBlock {
 
     }
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
        UrushiUtils.setInfo(list,"urushi_hopper");
     }
 }

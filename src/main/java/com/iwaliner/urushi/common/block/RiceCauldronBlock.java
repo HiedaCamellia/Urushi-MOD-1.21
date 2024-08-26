@@ -5,6 +5,7 @@ import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.core.util.UrushiUtils;
 import com.iwaliner.urushi.common.blockentity.RiceCauldronBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,7 +14,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -50,6 +53,11 @@ public class RiceCauldronBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
+    @Override
     public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
         return BOX;
     }
@@ -70,31 +78,30 @@ public class RiceCauldronBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(world.getBlockEntity(pos)instanceof RiceCauldronBlockEntity) {
             RiceCauldronBlockEntity  tileEntity= (RiceCauldronBlockEntity) world.getBlockEntity(pos);
             if(state.getValue(VARIANT)==0){
                 world.setBlockAndUpdate(pos,this.defaultBlockState().setValue(VARIANT,Integer.valueOf(1)));
                 world.playSound((Player) null,pos, SoundEvents.BARREL_CLOSE, SoundSource.BLOCKS,1F,1F);
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }else if(state.getValue(VARIANT)==1){
                 if(player.getItemInHand(hand).getItem()== ItemAndBlockRegister.raw_rice.get()){
                     tileEntity.setItem(0, new ItemStack(ItemAndBlockRegister.rice.get(),player.getItemInHand(hand).getCount()));
                     player.setItemInHand(hand,ItemStack.EMPTY);
                     world.playSound((Player) null,pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS,1F,1F);
-                  return InteractionResult.SUCCESS;
+                  return ItemInteractionResult.SUCCESS;
                 }else{
                     world.playSound((Player) null,pos,SoundEvents.BARREL_CLOSE,SoundSource.BLOCKS,1F,1F);
                     world.setBlockAndUpdate(pos,this.defaultBlockState().setValue(VARIANT,Integer.valueOf(0)));
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }
             }else if(state.getValue(VARIANT)==3){
                 world.setBlockAndUpdate(pos,this.defaultBlockState().setValue(VARIANT,Integer.valueOf(4)));
                 world.playSound((Player) null,pos,SoundEvents.BARREL_CLOSE,SoundSource.BLOCKS,1F,1F);
 
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }else if(state.getValue(VARIANT)==4){
-                ItemStack stack=player.getItemInHand(hand);
                 if (stack.isEmpty()) {
                     player.setItemInHand(hand, tileEntity.getItem(1));
                 } else if (!player.getInventory().add(tileEntity.getItem(1))) {
@@ -102,11 +109,11 @@ public class RiceCauldronBlock extends BaseEntityBlock {
                 }
                 world.playSound((Player) null,pos,SoundEvents.ITEM_PICKUP,SoundSource.BLOCKS,1F,1F);
                 tileEntity.setItem(1,ItemStack.EMPTY);
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
 
         }
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
 
     @Override
@@ -141,7 +148,7 @@ public class RiceCauldronBlock extends BaseEntityBlock {
 
 
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list,"ricecauldron");
    }
     @Nullable

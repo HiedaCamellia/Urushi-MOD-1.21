@@ -1,5 +1,6 @@
 package com.iwaliner.urushi.common.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -64,5 +65,10 @@ public class SimpleWallBlock extends CrossCollisionBlock {
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_53334_) {
         p_53334_.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED);
+    }
+
+    @Override
+    protected MapCodec<? extends CrossCollisionBlock> codec() {
+        return null;
     }
 }

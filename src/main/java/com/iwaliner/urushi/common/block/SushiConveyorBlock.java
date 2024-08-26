@@ -63,10 +63,10 @@ public class SushiConveyorBlock extends HorizonalRotateBlock implements SimpleWa
         p_49915_.add(NORTH,EAST,SOUTH,WEST,WATERLOGGED,FACING);
     }
 
-    @Override
-    public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
-        return true;
-    }
+//    @Override
+//    public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
+//        return true;
+//    }
     private boolean isConveyor(BlockState state){
         return state.getBlock() instanceof SushiConveyorBlock;
     }

@@ -1,5 +1,6 @@
 package com.iwaliner.urushi.common.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
@@ -18,6 +19,12 @@ public class HotSpringSourceBlock extends DirectionalBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(POWERED, Boolean.valueOf(false)));
 
     }
+
+    @Override
+    protected MapCodec<? extends DirectionalBlock> codec() {
+        return null;
+    }
+
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_55125_) {
         p_55125_.add(FACING,POWERED);
     }

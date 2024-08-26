@@ -4,6 +4,7 @@ package com.iwaliner.urushi.common.block;
 import com.iwaliner.urushi.registries.BlockEntityRegister;
 import com.iwaliner.urushi.common.blockentity.SanboBlockEntity;
 import com.iwaliner.urushi.core.util.UrushiUtils;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -13,7 +14,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -55,6 +58,11 @@ public class SanboBlock extends BaseEntityBlock {
     }
 
     @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
+    @Override
     public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
         return SHAPE;
     }
@@ -75,7 +83,7 @@ public class SanboBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(world.getBlockEntity(pos)instanceof SanboBlockEntity) {
             if(!player.isSuppressingBounce()){
             SanboBlockEntity  tileEntity= (SanboBlockEntity) world.getBlockEntity(pos);
@@ -87,19 +95,19 @@ public class SanboBlock extends BaseEntityBlock {
                 tileEntity.markUpdated();
                 heldStack.shrink(1);
                 world.playSound((Player) null,pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS,30F,10F);
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }else {
                 ItemStack pickedStack = tileEntity.pickItem().copy();
                 if (heldStack.isEmpty()) {
                     tileEntity.markUpdated();
                     player.setItemInHand(hand, pickedStack);
                     world.playSound((Player) null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 30F, 10F);
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 } else if (!player.getInventory().add(pickedStack)) {
                     tileEntity.markUpdated();
                     player.drop(pickedStack, false);
                     world.playSound((Player) null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 30F, 10F);
-                    return InteractionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 }
             }
             }else{
@@ -108,7 +116,7 @@ public class SanboBlock extends BaseEntityBlock {
             }
 
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
 
@@ -131,7 +139,7 @@ public class SanboBlock extends BaseEntityBlock {
 
 
     @Override
-    public void appendHoverText(ItemStack p_49816_, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         UrushiUtils.setInfo(list,"sanbo");
    }
     @Nullable

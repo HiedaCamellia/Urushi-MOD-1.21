@@ -11,7 +11,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -66,43 +68,43 @@ public class FermentationBarrelBlock extends Block {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(state.getBlock()!=ItemAndBlockRegister.fermentation_barrel.get()&&state.getBlock() instanceof FermentationBarrelBlock){
             level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F);
            if (player.getItemInHand(hand).isEmpty()) {
-                player.setItemInHand(hand, stack.get());
-            } else if (!player.getInventory().add(stack.get())) {
-                player.drop(stack.get(), false);
+                player.setItemInHand(hand, stack);
+            } else if (!player.getInventory().add(stack)) {
+                player.drop(stack, false);
             }
             level.setBlockAndUpdate(pos,ItemAndBlockRegister.fermentation_barrel.get().defaultBlockState());
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }else if(state.getBlock()==ItemAndBlockRegister.fermentation_barrel.get()){
             if(player.getItemInHand(hand).getItem()== ItemAndBlockRegister.rice.get()&&player.getItemInHand(hand).getCount()>=8){
                 player.getItemInHand(hand).shrink(8);
                 level.playSound((Player) null,pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS,1F,1F);
                 level.setBlockAndUpdate(pos,ItemAndBlockRegister.fermentation_barrel_with_rice.get().defaultBlockState());
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }else if(player.getItemInHand(hand).getItem()== ItemAndBlockRegister.rice_malt.get()&&player.getItemInHand(hand).getCount()>=8){
                 player.getItemInHand(hand).shrink(8);
                 level.playSound((Player) null,pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS,1F,1F);
                 level.setBlockAndUpdate(pos,ItemAndBlockRegister.fermentation_barrel_with_rice_malt.get().defaultBlockState());
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }else if(player.getItemInHand(hand).getItem()== ItemAndBlockRegister.shikomi_miso.get()&&player.getItemInHand(hand).getCount()>=8){
                 player.getItemInHand(hand).shrink(8);
                 level.playSound((Player) null,pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS,1F,1F);
                 level.setBlockAndUpdate(pos,ItemAndBlockRegister.fermentation_barrel_with_shikomi_miso.get().defaultBlockState());
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }else if(player.getItemInHand(hand).getItem()== ItemAndBlockRegister.miso.get()&&player.getItemInHand(hand).getCount()>=8){
                 player.getItemInHand(hand).shrink(8);
                 level.playSound((Player) null,pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS,1F,1F);
                 level.setBlockAndUpdate(pos,ItemAndBlockRegister.fermentation_barrel_with_miso.get().defaultBlockState());
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return InteractionResult.FAIL;
+        return ItemInteractionResult.FAIL;
     }
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
         if(!fermented_block.get().equals(Blocks.AIR)) {
             UrushiUtils.setInfo(list, "fermentation_barrel");
             UrushiUtils.setInfo(list, "fermentation_barrel2");

@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -36,22 +37,25 @@ public class RockBlock extends Block {
         super(p_49795_);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
+
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
-        if(state.getValue(FACING)==Direction.EAST){
+        if (state.getValue(FACING) == Direction.EAST) {
             return EAST_BOX;
-        }else if(state.getValue(FACING)==Direction.WEST){
+        } else if (state.getValue(FACING) == Direction.WEST) {
             return WEST_BOX;
-        }else if(state.getValue(FACING)==Direction.SOUTH){
+        } else if (state.getValue(FACING) == Direction.SOUTH) {
             return SOUTH_BOX;
-        }else {
+        } else {
             return NORTH_BOX;
         }
     }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_49915_) {
         p_49915_.add(FACING);
     }
+
     @Override
     public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation direction) {
         return state.setValue(FACING, direction.rotate(state.getValue(FACING)));
@@ -70,15 +74,15 @@ public class RockBlock extends Block {
 
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if(state.getBlock()== ItemAndBlockRegister.rock.get()) {
+        if (state.getBlock() == ItemAndBlockRegister.rock.get()) {
             if (random.nextInt(8) == 0) {
-                Direction facing=state.getValue(FACING);
-                for(int i=1;i<400;i++){
-                    BlockState stateX=level.getBlockState(pos.above(i));
-                    if(stateX.getBlock()== Blocks.POINTED_DRIPSTONE){
-                        level.setBlock(pos,ItemAndBlockRegister.sazare_ishi.get().defaultBlockState().setValue(FACING,facing),2);
+                Direction facing = state.getValue(FACING);
+                for (int i = 1; i < 400; i++) {
+                    BlockState stateX = level.getBlockState(pos.above(i));
+                    if (stateX.getBlock() == Blocks.POINTED_DRIPSTONE) {
+                        level.setBlock(pos, ItemAndBlockRegister.sazare_ishi.get().defaultBlockState().setValue(FACING, facing), 2);
                         break;
-                    }else if(!stateX.isAir()){
+                    } else if (!stateX.isAir()) {
                         break;
                     }
                 }
@@ -86,12 +90,15 @@ public class RockBlock extends Block {
             }
         }
     }
+
     @Override
-    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable BlockGetter p_49817_, List<Component> list, TooltipFlag p_49819_) {
-        if(Block.byItem(stack.getItem())==ItemAndBlockRegister.sazare_ishi.get()) {
-            UrushiUtils.setInfo(list, "sazare_ishi");
-        }else{
-            UrushiUtils.setInfo(list, "rock");
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> list, TooltipFlag tooltipFlag) {
+        {
+            if (Block.byItem(stack.getItem()) == ItemAndBlockRegister.sazare_ishi.get()) {
+                UrushiUtils.setInfo(list, "sazare_ishi");
+            } else {
+                UrushiUtils.setInfo(list, "rock");
+            }
         }
     }
 }
