@@ -1,21 +1,24 @@
 package com.iwaliner.urushi;
 
-import com.iwaliner.urushi.block.*;
-import com.iwaliner.urushi.blockentity.ShichirinBlockEntity;
+import com.iwaliner.urushi.common.block.*;
+import com.iwaliner.urushi.common.blockentity.ShichirinBlockEntity;
 
-import com.iwaliner.urushi.network.FramedBlockTextureConnectionData;
-import com.iwaliner.urushi.network.FramedBlockTextureConnectionProvider;
-import com.iwaliner.urushi.util.ElementType;
-import com.iwaliner.urushi.util.ElementUtils;
-import com.iwaliner.urushi.util.UrushiUtils;
-import com.iwaliner.urushi.util.interfaces.ElementItem;
-import com.iwaliner.urushi.util.interfaces.Tiered;
+import com.iwaliner.urushi.core.config.ConfigUrushi;
+import com.iwaliner.urushi.core.events.ClientSetUp;
+import com.iwaliner.urushi.core.network.FramedBlockTextureConnectionData;
+import com.iwaliner.urushi.core.network.FramedBlockTextureConnectionProvider;
+import com.iwaliner.urushi.core.util.ElementType;
+import com.iwaliner.urushi.core.util.ElementUtils;
+import com.iwaliner.urushi.core.util.UrushiUtils;
+import com.iwaliner.urushi.core.util.interfaces.ElementItem;
+import com.iwaliner.urushi.core.util.interfaces.Tiered;
+import com.iwaliner.urushi.registries.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.*;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,19 +27,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.Squid;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
@@ -49,30 +49,29 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
-import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.LootTableLoadEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
+import net.neoforged.neoforge.event.furnace.FurnaceFuelBurnTimeEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,7 +87,7 @@ public class ModCoreUrushi {
     public static File assetsInBuildDirectory;
 
     public static List<String> pickaxeList=new ArrayList<>();
-    public static List<RegistryObject<Block>> blockSelfDropList=new ArrayList<>();
+    public static List<DeferredBlock<Block>> blockSelfDropList=new ArrayList<>();
     public static List<String> axeList=new ArrayList<>();
     public static List<String> shovelList=new ArrayList<>();
     public static List<String> hoeList=new ArrayList<>();
@@ -99,21 +98,20 @@ public class ModCoreUrushi {
     public static List<String> diamondToolList=new ArrayList<>();
     public static List<String> netheriteToolList=new ArrayList<>();
     public static List<Item> underDevelopmentList=new ArrayList<>();
-    public static List<RegistryObject<Item>> redstoneTabContents=new ArrayList<>();
-    public static List<RegistryObject<Item>> urushiTabContents=new ArrayList<>();
-    public static List<RegistryObject<Item>> urushiPlasterTabContents=new ArrayList<>();
-    public static List<RegistryObject<Item>> urushiWoodTabContents=new ArrayList<>();
-    public static List<RegistryObject<Item>> urushiFoodTabContents=new ArrayList<>();
-    public static List<RegistryObject<Item>> urushiMagicTabContents=new ArrayList<>();
+    public static List<DeferredItem<Item>> redstoneTabContents=new ArrayList<>();
+    public static List<DeferredItem<Item>> urushiTabContents=new ArrayList<>();
+    public static List<DeferredItem<Item>> urushiPlasterTabContents=new ArrayList<>();
+    public static List<DeferredItem<Item>> urushiWoodTabContents=new ArrayList<>();
+    public static List<DeferredItem<Item>> urushiFoodTabContents=new ArrayList<>();
+    public static List<DeferredItem<Item>> urushiMagicTabContents=new ArrayList<>();
 
-    public static boolean isDebug=FMLPaths.GAMEDIR.get().toString().contains("イワライナー")&&FMLPaths.GAMEDIR.get().toString().contains("run");
+    public static boolean isDebug= FMLPaths.GAMEDIR.get().toString().contains("イワライナー")&&FMLPaths.GAMEDIR.get().toString().contains("run");
     public static Logger logger = LogManager.getLogger("urushi");
 
 
-    public ModCoreUrushi() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public ModCoreUrushi(IEventBus modEventBus, ModContainer modContainer) {
         /**コンフィグを登録*/
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON,ConfigUrushi.spec,"urushi.toml");
+        modContainer.registerConfig(ModConfig.Type.COMMON, ConfigUrushi.spec,"urushi.toml");
 
         /**アイテムとブロックを登録*/
         ItemAndBlockRegister.register(modEventBus);
@@ -152,7 +150,7 @@ public class ModCoreUrushi {
        // PlacedFeatureRegister.register(modEventBus);
 
 //        ConfiguredFeatureRegister.register(modEventBus);
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
 
     }
     private void CreativeTabEvent(BuildCreativeModeTabContentsEvent event)
@@ -184,9 +182,9 @@ public class ModCoreUrushi {
         DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
         DispenserBlock.registerBehavior(Items.BOWL, new OptionalDispenseItemBehavior() {
             protected ItemStack execute(BlockSource source, ItemStack stack) {
-                Level level = source.getLevel();
-                Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-                BlockPos blockpos = source.getPos().relative(direction);
+                Level level = source.level();
+                Direction direction = source.state().getValue(DispenserBlock.FACING);
+                BlockPos blockpos = source.pos().relative(direction);
                 BlockState blockstate = level.getBlockState(blockpos);
                 if (blockstate.getBlock() instanceof ChiseledLacquerLogBlock) {
                     if (blockstate.getValue(ChiseledLacquerLogBlock.FILLED)) {
@@ -197,7 +195,7 @@ public class ModCoreUrushi {
                         if (stack.isEmpty()) {
                             return new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get());
                         }
-                        if (source.<DispenserBlockEntity>getEntity().addItem(new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get()).copy()) < 0) {
+                        if (source.<DispenserBlockEntity>blockEntity().insertItem(new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get()).copy())==ItemStack.EMPTY) {
                             defaultDispenseItemBehavior.dispense(source, new ItemStack(ItemAndBlockRegister.raw_urushi_ball.get()).copy());
                         }
                     }
@@ -210,9 +208,9 @@ public class ModCoreUrushi {
 
         DispenserBlock.registerBehavior(ItemAndBlockRegister.rice_crop.get(), new OptionalDispenseItemBehavior() {
             protected ItemStack execute(BlockSource source, ItemStack stack) {
-                Level level = source.getLevel();
-                Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-                BlockPos blockpos = source.getPos().relative(direction);
+                Level level = source.level();
+                Direction direction = source.state().getValue(DispenserBlock.FACING);
+                BlockPos blockpos = source.pos().relative(direction);
                 BlockState blockstate = level.getBlockState(blockpos);
                 if (blockstate.getBlock() instanceof SenbakokiBlock) {
                     this.setSuccess(true);
@@ -221,7 +219,7 @@ public class ModCoreUrushi {
                         if (stack.isEmpty()) {
                             return new ItemStack(ItemAndBlockRegister.raw_rice.get(),2);
 						}
-						if (source.<DispenserBlockEntity>getEntity().addItem(new ItemStack(ItemAndBlockRegister.raw_rice.get(),2).copy()) < 0) {
+						if (source.<DispenserBlockEntity>blockEntity().insertItem(new ItemStack(ItemAndBlockRegister.raw_rice.get(),2).copy()) ==ItemStack.EMPTY) {
                             defaultDispenseItemBehavior.dispense(source, new ItemStack(ItemAndBlockRegister.raw_rice.get(),2).copy());
                         }
                     return stack;
@@ -401,7 +399,7 @@ public class ModCoreUrushi {
     /**草を壊して種が出るように*/
     @SubscribeEvent
     public void GrassDropEvent(BlockEvent.BreakEvent event) {
-        if (!event.getPlayer().isCreative() && (event.getLevel().getBlockState(event.getPos()).getBlock()==Blocks.FERN || event.getLevel().getBlockState(event.getPos()).getBlock()==Blocks.TALL_GRASS || event.getLevel().getBlockState(event.getPos()).getBlock()==Blocks.GRASS) ) {
+        if (!event.getPlayer().isCreative() && (event.getLevel().getBlockState(event.getPos()).getBlock()==Blocks.FERN || event.getLevel().getBlockState(event.getPos()).getBlock()==Blocks.TALL_GRASS || event.getLevel().getBlockState(event.getPos()).getBlock()==Blocks.SHORT_GRASS) ) {
             float rand =( event.getLevel()).getRandom().nextFloat();
             if(rand >= 0.3F){
                 return;
@@ -478,7 +476,7 @@ public class ModCoreUrushi {
 
     /**葉の上に落下したとき落下ダメージを受けないように*/
     @SubscribeEvent
-    public void LeavesDamageEvent(LivingHurtEvent event) {
+    public void LeavesDamageEvent(LivingDropsEvent event) {
         if(event.getSource()==event.getEntity().damageSources().fall()){
             Entity entity = event.getEntity();
             if(entity.level().getBlockState(entity.blockPosition().below()).getBlock() instanceof LeavesBlock){
@@ -517,7 +515,7 @@ public class ModCoreUrushi {
 
 
         if(ModCoreUrushi.isDebug){
-            // LevelAccessor level=event.getLevel();
+            // LevelAccessor level=event.level();
             // BlockPos pos=event.getPos();
             BlockState currentState=level.getBlockState(pos);
 
@@ -612,8 +610,8 @@ public class ModCoreUrushi {
             }
         }
 
-        if(stack.getTag()!=null){
-            CompoundTag tag=stack.getTag();
+        if(stack.get(DataComponents.CUSTOM_DATA)!=null){
+            CompoundTag tag=stack.get(DataComponents.CUSTOM_DATA).copyTag();
             if(tag.contains("cookingEnum")){
                 int i=tag.getInt("cookingEnum");
                 int level=ShichirinBlockEntity.getCookingLevel(i);
@@ -664,7 +662,7 @@ public class ModCoreUrushi {
     public void FoodEatEvent(LivingEntityUseItemEvent.Finish event) {
         LivingEntity livingEntity=event.getEntity();
         ItemStack stack=event.getResultStack();
-        CompoundTag tag=stack.getTag();
+        CompoundTag tag=stack.get(DataComponents.CUSTOM_DATA).copyTag();
         if(tag==null || !tag.contains("cookingEnum")){
             return;
         }
@@ -752,17 +750,17 @@ public class ModCoreUrushi {
             }
         }
     }
-    @SubscribeEvent
-    public void AttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
-        if(event.getObject() instanceof Player) {
-            if(!event.getObject().getCapability(FramedBlockTextureConnectionProvider.FRAMED_BLOCK_TEXTURE_CONNECTION).isPresent()) {
-                event.addCapability(new ResourceLocation(ModID, "properties"), new FramedBlockTextureConnectionProvider());
-            }
-        }
-    }
-    @SubscribeEvent
-    public void RegisterCapabilities(RegisterCapabilitiesEvent event) {
-        event.register(FramedBlockTextureConnectionData.class);
-    }
+//    @SubscribeEvent
+//    public void AttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
+//        if(event.getObject() instanceof Player) {
+//            if(!event.getObject().getCapability(FramedBlockTextureConnectionProvider.FRAMED_BLOCK_TEXTURE_CONNECTION).isPresent()) {
+//                event.addCapability(new ResourceLocation(ModID, "properties"), new FramedBlockTextureConnectionProvider());
+//            }
+//        }
+//    }
+//    @SubscribeEvent
+//    public void RegisterCapabilities(RegisterCapabilitiesEvent event) {
+//        event.register(FramedBlockTextureConnectionData.class);
+//    }
 
 }

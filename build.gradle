@@ -13,6 +13,12 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
+allprojects {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xmaxerrs" << "1000000"
+    }
+}
+
 version = mod_version
 group = mod_group_id
 

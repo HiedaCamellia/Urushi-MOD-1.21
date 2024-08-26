@@ -1,11 +1,14 @@
 package com.iwaliner.urushi.block;
 
-import com.iwaliner.urushi.DimensionRegister;
-import com.iwaliner.urushi.ItemAndBlockRegister;
 import com.iwaliner.urushi.ModCoreUrushi;
-import com.iwaliner.urushi.TagUrushi;
 
-import com.iwaliner.urushi.world.dimension.KakuriyoTeleporter;
+import com.iwaliner.urushi.common.block.GhostKakuriyoPortalCoreBlock;
+import com.iwaliner.urushi.common.block.HorizonalRotateBlock;
+import com.iwaliner.urushi.common.block.KakuriyoPortalCoreBlock;
+import com.iwaliner.urushi.common.world.dimension.KakuriyoTeleporter;
+import com.iwaliner.urushi.registries.DimensionRegister;
+import com.iwaliner.urushi.registries.ItemAndBlockRegister;
+import com.iwaliner.urushi.registries.TagUrushi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustColorTransitionOptions;
@@ -31,7 +34,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.ITeleporter;
 
 import net.minecraft.util.RandomSource;
 
@@ -112,7 +114,7 @@ public class KakuriyoPortalBlock extends HorizonalRotateBlock implements SimpleW
                 }else{
                     int portalY=4000;
                     for(int i=0;i<300;i++){
-                        if(serverlevel.getBlockState(upArrayPos.below(i)).getBlock() instanceof KakuriyoPortalCoreBlock||serverlevel.getBlockState(upArrayPos.below(i)).getBlock() instanceof GhostKakuriyoPortalCoreBlock){
+                        if(serverlevel.getBlockState(upArrayPos.below(i)).getBlock() instanceof KakuriyoPortalCoreBlock ||serverlevel.getBlockState(upArrayPos.below(i)).getBlock() instanceof GhostKakuriyoPortalCoreBlock){
                             portalY=upArrayPos.below(i).getY()-5;
                             ModCoreUrushi.logger.warn("Error 8");
                             break;
@@ -133,8 +135,8 @@ public class KakuriyoPortalBlock extends HorizonalRotateBlock implements SimpleW
                     entity.teleportTo(entity.getX(), portalY, entity.getZ());
                 }
                // if(state.getValue(FACING).getAxis()== Direction.Axis.Z) {
-                    ITeleporter teleporter = new KakuriyoTeleporter();
-                    entity.changeDimension(serverlevel, teleporter);
+//                    ITeleporter teleporter = new KakuriyoTeleporter();
+//                    entity.changeDimension(serverlevel, teleporter);
                // }else{
                 //    ITeleporter teleporter = new KakuriyoTeleporterAxisX();
                 //    entity.changeDimension(serverlevel, teleporter);
