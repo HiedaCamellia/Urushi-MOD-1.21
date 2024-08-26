@@ -1,5 +1,6 @@
 package com.iwaliner.urushi.common.fluidtype;
 
+import com.iwaliner.urushi.ModCoreUrushi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
@@ -31,9 +32,9 @@ public class HotSpringWaterFluidType extends FluidType {
     //@SubscribeEvent
     static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerFluidType(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation HotSpringStillTex = ResourceLocation.withDefaultNamespace("block/water_still");
-            private static final ResourceLocation HotSpringFlowingTex = ResourceLocation.withDefaultNamespace("block/water_flow");
-            private static final ResourceLocation HotSpringOverrayTex = ResourceLocation.withDefaultNamespace("block/water_overlay");
+            private static final ResourceLocation HotSpringStillTex = ResourceLocation.fromNamespaceAndPath(ModCoreUrushi.ModID,"block/water_still");
+            private static final ResourceLocation HotSpringFlowingTex = ResourceLocation.fromNamespaceAndPath(ModCoreUrushi.ModID,"block/water_flow");
+            private static final ResourceLocation HotSpringOverrayTex = ResourceLocation.fromNamespaceAndPath(ModCoreUrushi.ModID,"block/water_overlay");
 
             @Override
             public ResourceLocation getStillTexture() {

@@ -146,8 +146,8 @@ public class ModCoreUrushi {
 
 
         FeatureRegister.register(modEventBus);
-
-        PlacedFeatureRegister.register(modEventBus);
+//
+//        PlacedFeatureRegister.register(modEventBus);
 
         ConfiguredFeatureRegister.ConfiguredFeatures.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);

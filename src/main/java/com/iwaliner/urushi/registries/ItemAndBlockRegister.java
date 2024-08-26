@@ -1420,34 +1420,36 @@ public class ItemAndBlockRegister {
     }
     private static <T extends Block> DeferredBlock<T> B(String name,String tool,int l, Supplier<T > sup) {
         DeferredBlock<T> object = BLOCKS.register(name, sup);
-        DeferredItem<Item> object2 =ITEMS.register(name,() -> {return new BlockItem( Objects.requireNonNull(object.get()), (new Item.Properties()));});
+        DeferredItem<Item> object2 = ITEMS.register(name, () -> {
+            return new BlockItem(Objects.requireNonNull(object.get()), (new Item.Properties()));
+        });
         ModCoreUrushi.urushiTabContents.add(Objects.requireNonNull(object2));
-if(ModCoreUrushi.isDebug) {
-    ModCoreUrushi.blockSelfDropList.add((DeferredBlock<Block>) Objects.requireNonNull(object));
-    if (tool == "p") {
-        ModCoreUrushi.pickaxeList.add(ModCoreUrushi.ModID + ":" + name);
-    } else if (tool == "a") {
-        ModCoreUrushi.axeList.add(ModCoreUrushi.ModID + ":" + name);
-    } else if (tool == "s") {
-        ModCoreUrushi.shovelList.add(ModCoreUrushi.ModID + ":" + name);
-    } else if (tool == "h") {
-        ModCoreUrushi.hoeList.add(ModCoreUrushi.ModID + ":" + name);
-    }
+        if (ModCoreUrushi.isDebug) {
+            ModCoreUrushi.blockSelfDropList.add((DeferredBlock<Block>) Objects.requireNonNull(object));
+            if (tool == "p") {
+                ModCoreUrushi.pickaxeList.add(ModCoreUrushi.ModID + ":" + name);
+            } else if (tool == "a") {
+                ModCoreUrushi.axeList.add(ModCoreUrushi.ModID + ":" + name);
+            } else if (tool == "s") {
+                ModCoreUrushi.shovelList.add(ModCoreUrushi.ModID + ":" + name);
+            } else if (tool == "h") {
+                ModCoreUrushi.hoeList.add(ModCoreUrushi.ModID + ":" + name);
+            }
 
-    if (l == 0) {
-        ModCoreUrushi.woodenToolList.add("urushi:" + name);
-    } else if (l == 1) {
-        ModCoreUrushi.stoneToolList.add("urushi:" + name);
-    } else if (l == 2) {
-        ModCoreUrushi.ironToolList.add("urushi:" + name);
-    } else if (l == 3) {
-        ModCoreUrushi.goldenToolList.add("urushi:" + name);
-    } else if (l == 4) {
-        ModCoreUrushi.diamondToolList.add("urushi:" + name);
-    } else if (l == 5) {
-        ModCoreUrushi.netheriteToolList.add("urushi:" + name);
-    }
-}
+            if (l == 0) {
+                ModCoreUrushi.woodenToolList.add("urushi:" + name);
+            } else if (l == 1) {
+                ModCoreUrushi.stoneToolList.add("urushi:" + name);
+            } else if (l == 2) {
+                ModCoreUrushi.ironToolList.add("urushi:" + name);
+            } else if (l == 3) {
+                ModCoreUrushi.goldenToolList.add("urushi:" + name);
+            } else if (l == 4) {
+                ModCoreUrushi.diamondToolList.add("urushi:" + name);
+            } else if (l == 5) {
+                ModCoreUrushi.netheriteToolList.add("urushi:" + name);
+            }
+        }
         return object;
     }
     private static <T extends Block> DeferredBlock<T> BWater(String name, String tool, int l, java.util.function.Supplier<? extends ItemLike> result, Supplier<T > sup) {
