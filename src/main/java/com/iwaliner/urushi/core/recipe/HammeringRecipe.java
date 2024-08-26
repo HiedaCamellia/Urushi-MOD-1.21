@@ -5,9 +5,16 @@ import com.google.gson.JsonObject;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.ModCoreUrushi;
 import com.iwaliner.urushi.registries.RecipeTypeRegister;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -17,39 +24,33 @@ import net.minecraft.world.level.Level;
 
 
 import javax.annotation.Nullable;
+import java.util.List;
 
-public class HammeringRecipe implements Recipe<Container> {
+public class HammeringRecipe implements Recipe<SimpleInput> {
 
-    private final NonNullList<Ingredient> ingredient;
+    private final List<Ingredient> ingredient;
     private final ItemStack output;
-    private final ResourceLocation location;
-    public static ResourceLocation locationType=new ResourceLocation(ModCoreUrushi.ModID,"frying");
+    public static ResourceLocation locationType=ResourceLocation.fromNamespaceAndPath(ModCoreUrushi.ModID,"hammering");
 
 
-    public HammeringRecipe(NonNullList<Ingredient> input, ItemStack output, ResourceLocation location) {
+    public HammeringRecipe(List<Ingredient> input, ItemStack output ) {
         this.ingredient = input;
         this.output = output;
-        this.location = location;
     }
     public RecipeType<?> getType() {
         return RecipeTypeRegister.HammeringRecipe;
     }
-    @Override
-    public boolean matches(Container inventory, Level world) {
-
-        return ingredient.get(0).test(inventory.getItem(0));
-
-    }
-
-    @Override
-    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
+    public ItemStack getResult() {
         return output.copy();
     }
+
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_) {
-        return output.copy();
+    public boolean matches(SimpleInput simpleInput, Level level) {
+        return ingredient.get(0).test(simpleInput.getItem(0));
     }
-    public ItemStack getResultItem() {
+
+    @Override
+    public ItemStack assemble(SimpleInput simpleInput, HolderLookup.Provider provider) {
         return output.copy();
     }
 
@@ -58,15 +59,16 @@ public class HammeringRecipe implements Recipe<Container> {
         return true;
     }
 
-    public NonNullList<Ingredient> getIngredient() {
-        return ingredient;
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
+        return output.copy();
     }
 
 
-
-    @Override
-    public ResourceLocation getId() {
-        return location;
+    public NonNullList<Ingredient> getIngredient() {
+        NonNullList<Ingredient> list = NonNullList.create();
+        list.addAll(ingredient);
+        return list;
     }
 
     @Override
@@ -80,7 +82,9 @@ public class HammeringRecipe implements Recipe<Container> {
     }
 
     public NonNullList<Ingredient> getIngredients(){
-        return ingredient;
+        NonNullList<Ingredient> list = NonNullList.create();
+        list.addAll(ingredient);
+        return list;
     }
     public static class HammeringRecipeType implements RecipeType<HammeringRecipe> {
         @Override
@@ -92,32 +96,26 @@ public class HammeringRecipe implements Recipe<Container> {
     public static class HammeringSerializer<T extends HammeringRecipe>implements RecipeSerializer<HammeringRecipe> {
 
 
-        @Override
-        public HammeringRecipe fromJson(ResourceLocation location, JsonObject json) {
-            ItemStack output= ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json,"result"));
-            JsonArray ingredient=GsonHelper.getAsJsonArray(json,"ingredients");
-            NonNullList<Ingredient> input=NonNullList.withSize(1,Ingredient.EMPTY);
-            for(int i=0;i<input.size();i++){
-                input.set(i,Ingredient.fromJson(ingredient.get(0)));
-            }
-            return new HammeringRecipe(input,output,location);
-        }
+        public static final MapCodec<HammeringRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+                Codec.list(Ingredient.CODEC).fieldOf("ingredients").forGetter(HammeringRecipe::getIngredients),
+                ItemStack.CODEC.fieldOf("result").forGetter(HammeringRecipe::getResult)
+        ).apply(inst, HammeringRecipe::new));
 
-        @Nullable
+        public static final StreamCodec<RegistryFriendlyByteBuf, HammeringRecipe> STREAM_CODEC =
+                StreamCodec.composite(
+                        ByteBufCodecs.fromCodec(Codec.list(Ingredient.CODEC)), HammeringRecipe::getIngredients,
+                        ItemStack.STREAM_CODEC, HammeringRecipe::getResult,
+                        HammeringRecipe::new
+                );
+
         @Override
-        public HammeringRecipe fromNetwork(ResourceLocation location, FriendlyByteBuf buffer) {
-            NonNullList<Ingredient> input=NonNullList.withSize(1,Ingredient.EMPTY);
-            input.set(0,Ingredient.fromNetwork(buffer));
-            ItemStack output=buffer.readItem();
-            return new HammeringRecipe(input,output,location);
+        public MapCodec<HammeringRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, HammeringRecipe recipe) {
-            for (Ingredient ingredient :recipe.getIngredient()){
-                ingredient.toNetwork(buffer);
-            }
-            buffer.writeItemStack(recipe.output,false);
+        public StreamCodec<RegistryFriendlyByteBuf, HammeringRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

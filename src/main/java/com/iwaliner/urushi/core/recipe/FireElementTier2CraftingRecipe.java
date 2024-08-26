@@ -4,8 +4,14 @@ import com.google.gson.JsonObject;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.ModCoreUrushi;
 import com.iwaliner.urushi.registries.RecipeTypeRegister;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -15,10 +21,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class FireElementTier2CraftingRecipe extends AbstractElementCraftingRecipe{
-    public FireElementTier2CraftingRecipe(NonNullList<Ingredient> input, ItemStack output, ResourceLocation location, int reiryoku) {
-        super(input,output,location,reiryoku);
+    public FireElementTier2CraftingRecipe(List<Ingredient> input, ItemStack output , int reiryoku) {
+        super(input,output,reiryoku);
     }
     public RecipeType<?> getType() {
         return RecipeTypeRegister.FireElementTier2CraftingRecipe;
@@ -38,44 +45,35 @@ public class FireElementTier2CraftingRecipe extends AbstractElementCraftingRecip
     public static class FireElementTier2CraftingRecipeType implements RecipeType<FireElementTier2CraftingRecipe> {
         @Override
         public String toString() {
-            return new ResourceLocation(ModCoreUrushi.ModID,"fire_element_tier2_crafting").toString();
+            return ResourceLocation.fromNamespaceAndPath(ModCoreUrushi.ModID,"fire_element_tier2_crafting").toString();
         }
     }
 
     public static class FireElementTier2CraftingSerializer<T extends FireElementTier2CraftingRecipe> implements RecipeSerializer<FireElementTier2CraftingRecipe> {
 
 
+        public static final MapCodec<FireElementTier2CraftingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+                Codec.list(Ingredient.CODEC).fieldOf("ingredients").forGetter(FireElementTier2CraftingRecipe::getInputItems),
+                ItemStack.CODEC.fieldOf("result").forGetter(FireElementTier2CraftingRecipe::getResult),
+                Codec.INT.fieldOf("reiryoku").forGetter(FireElementTier2CraftingRecipe::getReiryoku)
+        ).apply(inst, FireElementTier2CraftingRecipe::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, FireElementTier2CraftingRecipe> STREAM_CODEC =
+                StreamCodec.composite(
+                        ByteBufCodecs.fromCodec(Codec.list(Ingredient.CODEC)), FireElementTier2CraftingRecipe::getInputItems,
+                        ItemStack.STREAM_CODEC, FireElementTier2CraftingRecipe::getResult,
+                        ByteBufCodecs.INT, FireElementTier2CraftingRecipe::getReiryoku,
+                        FireElementTier2CraftingRecipe::new
+                );
+
         @Override
-        public FireElementTier2CraftingRecipe fromJson(ResourceLocation location, JsonObject json) {
-            NonNullList<Ingredient> nonnulllist = itemsFromJson(GsonHelper.getAsJsonArray(json, "ingredients"));
-
-                ItemStack itemstack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-                int i = GsonHelper.getAsInt(json, "reiryoku");
-                return new FireElementTier2CraftingRecipe(nonnulllist,itemstack,location,i);
-
-        }
-
-        @Nullable
-        @Override
-        public FireElementTier2CraftingRecipe fromNetwork(ResourceLocation location, FriendlyByteBuf buffer) {
-            NonNullList<Ingredient> input=NonNullList.withSize(4,Ingredient.EMPTY);
-            for(int j = 0; j < input.size(); ++j) {
-                input.set(j, Ingredient.fromNetwork(buffer));
-            }
-            ItemStack output=buffer.readItem();
-            int i = buffer.readVarInt();
-            return new FireElementTier2CraftingRecipe(input,output,location,i);
+        public MapCodec<FireElementTier2CraftingRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, FireElementTier2CraftingRecipe recipe) {
-            for(Ingredient ingredient : recipe.getIngredients()) {
-                ingredient.toNetwork(buffer);
-            }
-
-            buffer.writeItem(recipe.output);
-            buffer.writeVarInt(recipe.getReiryoku());
-
+        public StreamCodec<RegistryFriendlyByteBuf, FireElementTier2CraftingRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

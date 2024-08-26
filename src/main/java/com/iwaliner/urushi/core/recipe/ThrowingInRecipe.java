@@ -4,9 +4,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.iwaliner.urushi.ModCoreUrushi;
 import com.iwaliner.urushi.registries.RecipeTypeRegister;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -17,39 +24,33 @@ import net.minecraft.world.level.Level;
 
 
 import javax.annotation.Nullable;
+import java.util.List;
 
-public class ThrowingInRecipe implements Recipe<Container> {
+public class ThrowingInRecipe implements Recipe<SimpleInput> {
 
-    private final NonNullList<Ingredient> ingredient;
+    private final List<Ingredient> ingredient;
     private final ItemStack output;
-    private final ResourceLocation location;
-    public static ResourceLocation locationType=new ResourceLocation(ModCoreUrushi.ModID,"frying");
+    public static ResourceLocation locationType=ResourceLocation.fromNamespaceAndPath(ModCoreUrushi.ModID,"throwing_in");
 
 
-    public ThrowingInRecipe(NonNullList<Ingredient> input, ItemStack output, ResourceLocation location) {
+    public ThrowingInRecipe(List<Ingredient> input, ItemStack output ) {
         this.ingredient = input;
         this.output = output;
-        this.location = location;
     }
     public RecipeType<?> getType() {
         return RecipeTypeRegister.ThrowingInRecipe;
     }
-    @Override
-    public boolean matches(Container inventory, Level world) {
-
-        return ingredient.get(0).test(inventory.getItem(0));
-
-    }
-
-    @Override
-    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
+    public ItemStack getResult() {
         return output.copy();
     }
+
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_) {
-        return output.copy();
+    public boolean matches(SimpleInput simpleInput, Level level) {
+        return ingredient.get(0).test(simpleInput.getItem(0));
     }
-    public ItemStack getResultItem() {
+
+    @Override
+    public ItemStack assemble(SimpleInput simpleInput, HolderLookup.Provider provider) {
         return output.copy();
     }
 
@@ -58,15 +59,16 @@ public class ThrowingInRecipe implements Recipe<Container> {
         return true;
     }
 
-    public NonNullList<Ingredient> getIngredient() {
-        return ingredient;
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
+        return output.copy();
     }
 
 
-
-    @Override
-    public ResourceLocation getId() {
-        return location;
+    public NonNullList<Ingredient> getIngredient() {
+        NonNullList<Ingredient> list = NonNullList.create();
+        list.addAll(ingredient);
+        return list;
     }
 
     @Override
@@ -80,7 +82,9 @@ public class ThrowingInRecipe implements Recipe<Container> {
     }
 
     public NonNullList<Ingredient> getIngredients(){
-        return ingredient;
+        NonNullList<Ingredient> list = NonNullList.create();
+        list.addAll(ingredient);
+        return list;
     }
     public static class ThrowingInRecipeType implements RecipeType<ThrowingInRecipe> {
         @Override
@@ -91,33 +95,26 @@ public class ThrowingInRecipe implements Recipe<Container> {
 
     public static class ThrowingInSerializer <T extends ThrowingInRecipe> implements RecipeSerializer<ThrowingInRecipe> {
 
+        public static final MapCodec<ThrowingInRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+                Codec.list(Ingredient.CODEC).fieldOf("ingredients").forGetter(ThrowingInRecipe::getIngredients),
+                ItemStack.CODEC.fieldOf("result").forGetter(ThrowingInRecipe::getResult)
+        ).apply(inst, ThrowingInRecipe::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, ThrowingInRecipe> STREAM_CODEC =
+                StreamCodec.composite(
+                        ByteBufCodecs.fromCodec(Codec.list(Ingredient.CODEC)), ThrowingInRecipe::getIngredients,
+                        ItemStack.STREAM_CODEC, ThrowingInRecipe::getResult,
+                        ThrowingInRecipe::new
+                );
 
         @Override
-        public ThrowingInRecipe fromJson(ResourceLocation location, JsonObject json) {
-            ItemStack output= ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json,"result"));
-            JsonArray ingredient=GsonHelper.getAsJsonArray(json,"ingredients");
-            NonNullList<Ingredient> input=NonNullList.withSize(1,Ingredient.EMPTY);
-            for(int i=0;i<input.size();i++){
-                input.set(i,Ingredient.fromJson(ingredient.get(0)));
-            }
-            return new ThrowingInRecipe(input,output,location);
-        }
-
-        @Nullable
-        @Override
-        public ThrowingInRecipe fromNetwork(ResourceLocation location, FriendlyByteBuf buffer) {
-            NonNullList<Ingredient> input=NonNullList.withSize(1,Ingredient.EMPTY);
-            input.set(0,Ingredient.fromNetwork(buffer));
-            ItemStack output=buffer.readItem();
-            return new ThrowingInRecipe(input,output,location);
+        public MapCodec<ThrowingInRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, ThrowingInRecipe recipe) {
-            for (Ingredient ingredient :recipe.getIngredient()){
-                ingredient.toNetwork(buffer);
-            }
-            buffer.writeItemStack(recipe.output,false);
+        public StreamCodec<RegistryFriendlyByteBuf, ThrowingInRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

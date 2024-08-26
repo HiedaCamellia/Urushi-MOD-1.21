@@ -4,8 +4,14 @@ import com.google.gson.JsonObject;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.ModCoreUrushi;
 import com.iwaliner.urushi.registries.RecipeTypeRegister;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -15,10 +21,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class EarthElementTier2CraftingRecipe extends AbstractElementCraftingRecipe{
-    public EarthElementTier2CraftingRecipe(NonNullList<Ingredient> input, ItemStack output, ResourceLocation location, int reiryoku) {
-        super(input,output,location,reiryoku);
+    public EarthElementTier2CraftingRecipe(List<Ingredient> input, ItemStack output, int reiryoku) {
+        super(input,output,reiryoku);
     }
     public RecipeType<?> getType() {
         return RecipeTypeRegister.EarthElementTier2CraftingRecipe;
@@ -38,42 +45,35 @@ public class EarthElementTier2CraftingRecipe extends AbstractElementCraftingReci
     public static class EarthElementTier2CraftingRecipeType implements RecipeType<EarthElementTier2CraftingRecipe> {
         @Override
         public String toString() {
-            return new ResourceLocation(ModCoreUrushi.ModID,"earth_element_tier2_crafting").toString();
+            return ResourceLocation.fromNamespaceAndPath(ModCoreUrushi.ModID,"earth_element_tier2_crafting").toString();
         }
     }
 
     public static class EarthElementTier2CraftingSerializer<T extends EarthElementTier2CraftingRecipe>implements RecipeSerializer<EarthElementTier2CraftingRecipe> {
 
 
-        @Override
-        public EarthElementTier2CraftingRecipe fromJson(ResourceLocation location, JsonObject json) {
-            NonNullList<Ingredient> nonnulllist = itemsFromJson(GsonHelper.getAsJsonArray(json, "ingredients"));
-                ItemStack itemstack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-                int i = GsonHelper.getAsInt(json, "reiryoku");
-                return new EarthElementTier2CraftingRecipe(nonnulllist,itemstack,location,i);
+        public static final MapCodec<EarthElementTier2CraftingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+                Codec.list(Ingredient.CODEC).fieldOf("ingredients").forGetter(EarthElementTier2CraftingRecipe::getInputItems),
+                ItemStack.CODEC.fieldOf("result").forGetter(EarthElementTier2CraftingRecipe::getResult),
+                Codec.INT.fieldOf("reiryoku").forGetter(EarthElementTier2CraftingRecipe::getReiryoku)
+        ).apply(inst, EarthElementTier2CraftingRecipe::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, EarthElementTier2CraftingRecipe> STREAM_CODEC =
+                StreamCodec.composite(
+                        ByteBufCodecs.fromCodec(Codec.list(Ingredient.CODEC)), EarthElementTier2CraftingRecipe::getInputItems,
+                        ItemStack.STREAM_CODEC, EarthElementTier2CraftingRecipe::getResult,
+                        ByteBufCodecs.INT, EarthElementTier2CraftingRecipe::getReiryoku,
+                        EarthElementTier2CraftingRecipe::new
+                );
+
+        @Override
+        public MapCodec<EarthElementTier2CraftingRecipe> codec() {
+            return CODEC;
         }
 
-        @Nullable
         @Override
-        public EarthElementTier2CraftingRecipe fromNetwork(ResourceLocation location, FriendlyByteBuf buffer) {
-            NonNullList<Ingredient> input=NonNullList.withSize(4,Ingredient.EMPTY);
-            for(int j = 0; j < input.size(); ++j) {
-                input.set(j, Ingredient.fromNetwork(buffer));
-            }
-            ItemStack output=buffer.readItem();
-            int i = buffer.readVarInt();
-            return new EarthElementTier2CraftingRecipe(input,output,location,i);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, EarthElementTier2CraftingRecipe recipe) {
-            for(Ingredient ingredient : recipe.getIngredients()) {
-                ingredient.toNetwork(buffer);
-            }
-            buffer.writeItem(recipe.output);
-            buffer.writeVarInt(recipe.getReiryoku());
-
+        public StreamCodec<RegistryFriendlyByteBuf, EarthElementTier2CraftingRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

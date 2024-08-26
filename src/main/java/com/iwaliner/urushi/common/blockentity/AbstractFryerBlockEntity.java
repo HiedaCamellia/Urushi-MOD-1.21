@@ -4,6 +4,7 @@ package com.iwaliner.urushi.common.blockentity;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.iwaliner.urushi.core.recipe.SimpleInput;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.core.recipe.FryingRecipe;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -44,6 +46,7 @@ public abstract class AbstractFryerBlockEntity extends BaseContainerBlockEntity 
     private static final int[] SLOTS_FOR_DOWN = new int[]{2, 1};
     private static final int[] SLOTS_FOR_SIDES = new int[]{1};
     protected NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
+    private final SidedInvWrapper handler = new SidedInvWrapper(this, null);
     public int litTime;
     public int litDuration;
     public int cookingProgress;
@@ -107,34 +110,37 @@ public abstract class AbstractFryerBlockEntity extends BaseContainerBlockEntity 
     public boolean isLit() {
         return this.litTime > 0;
     }
-    public void load(CompoundTag p_155025_) {
-        super.load(p_155025_);
+
+    @Override
+    public void loadAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(compound, lookupProvider);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(p_155025_, this.items);
-        this.litTime = p_155025_.getInt("BurnTime");
-        this.cookingProgress = p_155025_.getInt("CookTime");
-        this.cookingTotalTime = p_155025_.getInt("CookTimeTotal");
+        ContainerHelper.loadAllItems(compound, this.items, lookupProvider);
+        this.litTime = compound.getInt("BurnTime");
+        this.cookingProgress = compound.getInt("CookTime");
+        this.cookingTotalTime = compound.getInt("CookTimeTotal");
         this.litDuration = this.getBurnDuration(this.items.get(1));
-        CompoundTag compoundtag = p_155025_.getCompound("RecipesUsed");
+        CompoundTag compoundtag = compound.getCompound("RecipesUsed");
 
         for(String s : compoundtag.getAllKeys()) {
             this.recipesUsed.put(ResourceLocation.parse(s), compoundtag.getInt(s));
         }
-
     }
 
-    protected void saveAdditional(CompoundTag p_187452_) {
-        super.saveAdditional(p_187452_);
-        p_187452_.putInt("BurnTime", this.litTime);
-        p_187452_.putInt("CookTime", this.cookingProgress);
-        p_187452_.putInt("CookTimeTotal", this.cookingTotalTime);
-        ContainerHelper.saveAllItems(p_187452_, this.items);
+    @Override
+    public void saveAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(compound, lookupProvider);
+        compound.putInt("BurnTime", this.litTime);
+        compound.putInt("CookTime", this.cookingProgress);
+        compound.putInt("CookTimeTotal", this.cookingTotalTime);
+        ContainerHelper.saveAllItems(compound, this.items, lookupProvider);
         CompoundTag compoundtag = new CompoundTag();
         this.recipesUsed.forEach((p_187449_, p_187450_) -> {
             compoundtag.putInt(p_187449_.toString(), p_187450_);
         });
-        p_187452_.put("RecipesUsed", compoundtag);
+        compound.put("RecipesUsed", compoundtag);
     }
+    
     public static void serverTick(Level level, BlockPos pos, BlockState state, AbstractFryerBlockEntity blockEntity) {
         boolean flag = blockEntity.isLit();
         boolean flag1 = false;
@@ -143,11 +149,15 @@ public abstract class AbstractFryerBlockEntity extends BaseContainerBlockEntity 
         }
 
         if (!level.isClientSide) {
-            Recipe<?> recipe = level.getRecipeManager().getRecipeFor((RecipeType<FryingRecipe>)blockEntity.recipeType, blockEntity, level).orElse(null);
+            Recipe<?> recipe = level.getRecipeManager().getRecipeFor(
+                    (RecipeType<FryingRecipe>)blockEntity.recipeType,
+                    new SimpleInput(List.of()),
+                    level)
+                    .orElse(null).value();
 
             ItemStack itemstack = blockEntity.items.get(1);
             if (blockEntity.isLit() || !itemstack.isEmpty() && !blockEntity.items.get(0).isEmpty()) {
-                Recipe<?> irecipe = blockEntity.level.getRecipeManager().getRecipeFor((RecipeType<FryingRecipe>)blockEntity.recipeType, blockEntity,level).orElse(null);
+                Recipe<?> irecipe = blockEntity.level.getRecipeManager().getRecipeFor((RecipeType<FryingRecipe>)blockEntity.recipeType, new SimpleInput(List.of(itemstack)),level).orElse(null).value();
                 if (!blockEntity.isLit() && blockEntity.canBurn(level.registryAccess(),recipe,blockEntity.items,blockEntity.getMaxStackSize())) {
                     blockEntity.litTime = blockEntity.getBurnDuration(itemstack);
                     blockEntity.litDuration = blockEntity.litTime;
@@ -192,13 +202,13 @@ public abstract class AbstractFryerBlockEntity extends BaseContainerBlockEntity 
         }
     }
 
-    public boolean canBurn(RegistryAccess p_266924_,@Nullable Recipe<?> p_155006_, NonNullList<ItemStack> p_155007_, int p_155008_) {
-        if (!p_155007_.get(0).isEmpty() && p_155006_ != null) {
-            ItemStack itemstack = ((Recipe<WorldlyContainer>) p_155006_).assemble(this,p_266924_);
+    public boolean canBurn(RegistryAccess p_266924_,@Nullable Recipe<?> p_155006_, NonNullList<ItemStack> input, int p_155008_) {
+        if (!input.get(0).isEmpty() && p_155006_ != null) {
+            ItemStack itemstack = ((Recipe<SimpleInput>) p_155006_).assemble(new SimpleInput(List.of(input.get(0))),p_266924_);
             if (itemstack.isEmpty()) {
                 return false;
             } else {
-                ItemStack itemstack1 = p_155007_.get(2);
+                ItemStack itemstack1 = input.get(2);
                 if (itemstack1.isEmpty()) {
                     return true;
                 } else if (!ItemStack.isSameItemSameComponents(itemstack, itemstack1)) {
@@ -213,11 +223,11 @@ public abstract class AbstractFryerBlockEntity extends BaseContainerBlockEntity 
             return false;
         }
     }
-    public boolean burn(RegistryAccess p_266740_, @Nullable Recipe<?> p_155027_, NonNullList<ItemStack> p_155028_, int p_155029_) {
-        if (p_155027_ != null && this.canBurn(p_266740_,p_155027_, p_155028_, p_155029_)) {
-            ItemStack itemstack = p_155028_.get(0);
-            ItemStack itemstack1 = ((Recipe<WorldlyContainer>) p_155027_).assemble(this,p_266740_);
-            ItemStack itemstack2 = p_155028_.get(2);
+    public boolean burn(RegistryAccess p_266740_, @Nullable Recipe<?> p_155027_, NonNullList<ItemStack> input, int p_155029_) {
+        if (p_155027_ != null && this.canBurn(p_266740_,p_155027_, input, p_155029_)) {
+            ItemStack itemstack = input.get(0);
+            ItemStack itemstack1 = ((Recipe<SimpleInput>) p_155027_).assemble(new SimpleInput(List.of(input.get(0))),p_266740_);
+            ItemStack itemstack2 = input.get(2);
             if (itemstack2.isEmpty()) {
                 this.items.set(2, itemstack1.copy());
             } else if (itemstack2.getItem() == itemstack1.getItem()) {
@@ -330,31 +340,17 @@ public abstract class AbstractFryerBlockEntity extends BaseContainerBlockEntity 
 
     public void setRecipeUsed(@Nullable Recipe<?> p_193056_1_) {
         if (p_193056_1_ != null) {
-            ResourceLocation resourcelocation = p_193056_1_.getId();
-            this.recipesUsed.addTo(resourcelocation, 1);
+            //this.recipesUsed.addTo(resourcelocation, 1);
         }
 
     }
-    @Nullable
-    public Recipe<?> getRecipeUsed() {
-        return null;
-    }
-
-    public void awardUsedRecipes(Player p_201560_1_) {
-    }
-
-    public void awardUsedRecipesAndPopExperience(ServerPlayer p_155004_) {
-        List<Recipe<?>> list = this.getRecipesToAwardAndPopExperience(p_155004_.serverLevel(), p_155004_.position());
-        p_155004_.awardRecipes(list);
-        this.recipesUsed.clear();
-    }
-
+    
     public List<Recipe<?>> getRecipesToAwardAndPopExperience(ServerLevel p_235640_1_, Vec3 p_235640_2_) {
         List<Recipe<?>> list = Lists.newArrayList();
 
         for(Object2IntMap.Entry<ResourceLocation> entry : this.recipesUsed.object2IntEntrySet()) {
             p_235640_1_.getRecipeManager().byKey(entry.getKey()).ifPresent((p_235642_4_) -> {
-                list.add(p_235642_4_);
+                list.add(p_235642_4_.value());
                 createExperience(p_235640_1_, p_235640_2_, entry.getIntValue(), 0.35f);
             });
         }
@@ -378,27 +374,8 @@ public abstract class AbstractFryerBlockEntity extends BaseContainerBlockEntity 
 
     }
 
-    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] handlers =
-            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
 
-    @Override
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
-        if (!this.remove && facing != null && capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) {
-            if (facing == Direction.UP)
-                return handlers[0].cast();
-            else if (facing == Direction.DOWN)
-                return handlers[1].cast();
-            else
-                return handlers[2].cast();
-        }
-        return super.getCapability(capability, facing);
+    public SidedInvWrapper getItemHandler() {
+        return handler;
     }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        for (int x = 0; x < handlers.length; x++)
-            handlers[x].invalidate();
-    }
-
 }

@@ -4,8 +4,14 @@ import com.google.gson.JsonObject;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.ModCoreUrushi;
 import com.iwaliner.urushi.registries.RecipeTypeRegister;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -16,10 +22,11 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class WaterElementTier1CraftingRecipe extends AbstractElementCraftingRecipe{
-    public WaterElementTier1CraftingRecipe(NonNullList<Ingredient> input, ItemStack output, ResourceLocation location, int reiryoku) {
-        super(input,output,location,reiryoku);
+    public WaterElementTier1CraftingRecipe(List<Ingredient> input, ItemStack output , int reiryoku) {
+        super(input,output,reiryoku);
     }
     public RecipeType<?> getType() {
         return RecipeTypeRegister.WaterElementTier1CraftingRecipe;
@@ -39,44 +46,35 @@ public class WaterElementTier1CraftingRecipe extends AbstractElementCraftingReci
     public static class WaterElementTier1CraftingRecipeType implements RecipeType<WaterElementTier1CraftingRecipe> {
         @Override
         public String toString() {
-            return new ResourceLocation(ModCoreUrushi.ModID,"water_element_tier1_crafting").toString();
+            return ResourceLocation.fromNamespaceAndPath(ModCoreUrushi.ModID,"water_element_tier1_crafting").toString();
         }
     }
 
     public static class WaterElementTier1CraftingSerializer <T extends WaterElementTier1CraftingRecipe> implements RecipeSerializer<WaterElementTier1CraftingRecipe> {
 
+        public static final MapCodec<WaterElementTier1CraftingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+                Codec.list(Ingredient.CODEC).fieldOf("ingredients").forGetter(WaterElementTier1CraftingRecipe::getInputItems),
+                ItemStack.CODEC.fieldOf("result").forGetter(WaterElementTier1CraftingRecipe::getResult),
+                Codec.INT.fieldOf("reiryoku").forGetter(WaterElementTier1CraftingRecipe::getReiryoku)
+        ).apply(inst, WaterElementTier1CraftingRecipe::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, WaterElementTier1CraftingRecipe> STREAM_CODEC =
+                StreamCodec.composite(
+                        ByteBufCodecs.fromCodec(Codec.list(Ingredient.CODEC)), WaterElementTier1CraftingRecipe::getInputItems,
+                        ItemStack.STREAM_CODEC, WaterElementTier1CraftingRecipe::getResult,
+                        ByteBufCodecs.INT, WaterElementTier1CraftingRecipe::getReiryoku,
+                        WaterElementTier1CraftingRecipe::new
+                );
 
         @Override
-        public WaterElementTier1CraftingRecipe fromJson(ResourceLocation location, JsonObject json) {
-            NonNullList<Ingredient> nonnulllist = itemsFromJson(GsonHelper.getAsJsonArray(json, "ingredients"));
-
-                ItemStack itemstack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-                int i = GsonHelper.getAsInt(json, "reiryoku");
-                return new WaterElementTier1CraftingRecipe(nonnulllist,itemstack,location,i);
-
-        }
-
-        @Nullable
-        @Override
-        public WaterElementTier1CraftingRecipe fromNetwork(ResourceLocation location, FriendlyByteBuf buffer) {
-            NonNullList<Ingredient> input=NonNullList.withSize(4,Ingredient.EMPTY);
-            for(int j = 0; j < input.size(); ++j) {
-                input.set(j, Ingredient.fromNetwork(buffer));
-            }
-            ItemStack output=buffer.readItem();
-            int i = buffer.readVarInt();
-            return new WaterElementTier1CraftingRecipe(input,output,location,i);
+        public MapCodec<WaterElementTier1CraftingRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, WaterElementTier1CraftingRecipe recipe) {
-            for(Ingredient ingredient : recipe.getIngredients()) {
-                ingredient.toNetwork(buffer);
-            }
-
-            buffer.writeItem(recipe.output);
-            buffer.writeVarInt(recipe.getReiryoku());
-
+        public StreamCodec<RegistryFriendlyByteBuf, WaterElementTier1CraftingRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
+
     }
 }

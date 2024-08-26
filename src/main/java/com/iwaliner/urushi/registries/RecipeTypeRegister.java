@@ -13,43 +13,43 @@ public class RecipeTypeRegister {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER =
             DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, ModCoreUrushi.ModID);
 
-    public static final DeferredHolder<RecipeSerializer<?>,FryingRecipe.FryingSerializer> FryingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,FryingRecipe.FryingSerializer<?>> FryingSerializer
             = RECIPE_SERIALIZER.register("frying", com.iwaliner.urushi.core.recipe.FryingRecipe.FryingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,HammeringRecipe.HammeringSerializer> HammeringSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,HammeringRecipe.HammeringSerializer<?>> HammeringSerializer
             = RECIPE_SERIALIZER.register("hammering", com.iwaliner.urushi.core.recipe.HammeringRecipe.HammeringSerializer::new);
 
-    public static final DeferredHolder<RecipeSerializer<?>,com.iwaliner.urushi.core.recipe.OilExtractingRecipe.OilExtractingSerializer> OilExtractingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,OilExtractingRecipe.OilExtractingSerializer<?>> OilExtractingSerializer
             = RECIPE_SERIALIZER.register("oil_extracting", com.iwaliner.urushi.core.recipe.OilExtractingRecipe.OilExtractingSerializer::new);
 
-    public static final DeferredHolder<RecipeSerializer<?>,com.iwaliner.urushi.core.recipe.ThrowingInRecipe.ThrowingInSerializer> ThrowingInSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,ThrowingInRecipe.ThrowingInSerializer<?>> ThrowingInSerializer
             = RECIPE_SERIALIZER.register("throwing_in", com.iwaliner.urushi.core.recipe.ThrowingInRecipe.ThrowingInSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,SenbakokiRecipe.SenbakokiSerializer> SenbakokiSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,SenbakokiRecipe.SenbakokiSerializer<?>> SenbakokiSerializer
             = RECIPE_SERIALIZER.register("senbakoki", com.iwaliner.urushi.core.recipe.SenbakokiRecipe.SenbakokiSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,com.iwaliner.urushi.core.recipe.FoxEatingRecipe.FoxEatingSerializer> FoxEatingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,com.iwaliner.urushi.core.recipe.FoxEatingRecipe.FoxEatingSerializer<?>> FoxEatingSerializer
             = RECIPE_SERIALIZER.register("fox_eating", com.iwaliner.urushi.core.recipe.FoxEatingRecipe.FoxEatingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,SandpaperPolishingRecipe.SandpaperPolishingSerializer> SandpaperPolishingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,SandpaperPolishingRecipe.SandpaperPolishingSerializer<?>> SandpaperPolishingSerializer
             = RECIPE_SERIALIZER.register("polishing", com.iwaliner.urushi.core.recipe.SandpaperPolishingRecipe.SandpaperPolishingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,com.iwaliner.urushi.core.recipe.ChiseledLacquerLogRecipe.ChiseledLacquerLogSerializer> ChiseledLacquerLogSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,ChiseledLacquerLogRecipe.ChiseledLacquerLogSerializer<?>> ChiseledLacquerLogSerializer
             = RECIPE_SERIALIZER.register("chiseled_lacquer_log", com.iwaliner.urushi.core.recipe.ChiseledLacquerLogRecipe.ChiseledLacquerLogSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,WoodElementTier1CraftingRecipe.WoodElementTier1CraftingSerializer> WoodElementTier1CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,WoodElementTier1CraftingRecipe.WoodElementTier1CraftingSerializer<?>> WoodElementTier1CraftingSerializer
             = RECIPE_SERIALIZER.register("wood_element_tier1_crafting", com.iwaliner.urushi.core.recipe.WoodElementTier1CraftingRecipe.WoodElementTier1CraftingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,FireElementTier1CraftingRecipe.FireElementTier1CraftingSerializer> FireElementTier1CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,FireElementTier1CraftingRecipe.FireElementTier1CraftingSerializer<?>> FireElementTier1CraftingSerializer
             = RECIPE_SERIALIZER.register("fire_element_tier1_crafting", com.iwaliner.urushi.core.recipe.FireElementTier1CraftingRecipe.FireElementTier1CraftingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,EarthElementTier1CraftingRecipe.EarthElementTier1CraftingSerializer> EarthElementTier1CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,EarthElementTier1CraftingRecipe.EarthElementTier1CraftingSerializer<?>> EarthElementTier1CraftingSerializer
             = RECIPE_SERIALIZER.register("earth_element_tier1_crafting", com.iwaliner.urushi.core.recipe.EarthElementTier1CraftingRecipe.EarthElementTier1CraftingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,MetalElementTier1CraftingRecipe.MetalElementTier1CraftingSerializer> MetalElementTier1CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,MetalElementTier1CraftingRecipe.MetalElementTier1CraftingSerializer<?>> MetalElementTier1CraftingSerializer
             = RECIPE_SERIALIZER.register("metal_element_tier1_crafting", com.iwaliner.urushi.core.recipe.MetalElementTier1CraftingRecipe.MetalElementTier1CraftingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,WaterElementTier1CraftingRecipe.WaterElementTier1CraftingSerializer> WaterElementTier1CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,WaterElementTier1CraftingRecipe.WaterElementTier1CraftingSerializer<?>> WaterElementTier1CraftingSerializer
             = RECIPE_SERIALIZER.register("water_element_tier1_crafting", com.iwaliner.urushi.core.recipe.WaterElementTier1CraftingRecipe.WaterElementTier1CraftingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,WoodElementTier2CraftingRecipe.WoodElementTier2CraftingSerializer> WoodElementTier2CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,WoodElementTier2CraftingRecipe.WoodElementTier2CraftingSerializer<?>> WoodElementTier2CraftingSerializer
             = RECIPE_SERIALIZER.register("wood_element_tier2_crafting", com.iwaliner.urushi.core.recipe.WoodElementTier2CraftingRecipe.WoodElementTier2CraftingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,FireElementTier2CraftingRecipe.FireElementTier2CraftingSerializer> FireElementTier2CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,FireElementTier2CraftingRecipe.FireElementTier2CraftingSerializer<?>> FireElementTier2CraftingSerializer
             = RECIPE_SERIALIZER.register("fire_element_tier2_crafting", com.iwaliner.urushi.core.recipe.FireElementTier2CraftingRecipe.FireElementTier2CraftingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,EarthElementTier2CraftingRecipe.EarthElementTier2CraftingSerializer> EarthElementTier2CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,EarthElementTier2CraftingRecipe.EarthElementTier2CraftingSerializer<?>> EarthElementTier2CraftingSerializer
             = RECIPE_SERIALIZER.register("earth_element_tier2_crafting", com.iwaliner.urushi.core.recipe.EarthElementTier2CraftingRecipe.EarthElementTier2CraftingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,MetalElementTier2CraftingRecipe.MetalElementTier2CraftingSerializer> MetalElementTier2CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,MetalElementTier2CraftingRecipe.MetalElementTier2CraftingSerializer<?>> MetalElementTier2CraftingSerializer
             = RECIPE_SERIALIZER.register("metal_element_tier2_crafting", com.iwaliner.urushi.core.recipe.MetalElementTier2CraftingRecipe.MetalElementTier2CraftingSerializer::new);
-    public static final DeferredHolder<RecipeSerializer<?>,WaterElementTier2CraftingRecipe.WaterElementTier2CraftingSerializer> WaterElementTier2CraftingSerializer
+    public static final DeferredHolder<RecipeSerializer<?>,WaterElementTier2CraftingRecipe.WaterElementTier2CraftingSerializer<?>> WaterElementTier2CraftingSerializer
             = RECIPE_SERIALIZER.register("water_element_tier2_crafting", com.iwaliner.urushi.core.recipe.WaterElementTier2CraftingRecipe.WaterElementTier2CraftingSerializer::new);
 
 

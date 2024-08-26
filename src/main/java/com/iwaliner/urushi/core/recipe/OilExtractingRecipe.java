@@ -5,9 +5,16 @@ import com.google.gson.JsonObject;
 import com.iwaliner.urushi.registries.ItemAndBlockRegister;
 import com.iwaliner.urushi.ModCoreUrushi;
 import com.iwaliner.urushi.registries.RecipeTypeRegister;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -17,55 +24,51 @@ import net.minecraft.world.level.Level;
 
 
 import javax.annotation.Nullable;
+import java.util.List;
 
-public class OilExtractingRecipe implements Recipe<Container> {
+public class OilExtractingRecipe implements Recipe<SimpleInput> {
 
-    private final NonNullList<Ingredient> ingredient;
+    private final List<Ingredient> ingredient;
     private final ItemStack output;
-    private final ResourceLocation location;
-    public static ResourceLocation locationType=new ResourceLocation(ModCoreUrushi.ModID,"frying");
+    public static ResourceLocation locationType=ResourceLocation.fromNamespaceAndPath(ModCoreUrushi.ModID,"oil_extracting");
 
 
-    public OilExtractingRecipe(NonNullList<Ingredient> input, ItemStack output, ResourceLocation location) {
+    public OilExtractingRecipe(List<Ingredient> input, ItemStack output ) {
         this.ingredient = input;
         this.output = output;
-        this.location = location;
     }
     public RecipeType<?> getType() {
         return RecipeTypeRegister.OilExtractingRecipe;
     }
-    @Override
-    public boolean matches(Container inventory, Level world) {
-
-        return ingredient.get(0).test(inventory.getItem(0));
-
+    public ItemStack getResult() {
+        return output.copy();
     }
 
     @Override
-    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
-        return output.copy();
+    public boolean matches(SimpleInput simpleInput, Level level) {
+        return ingredient.get(0).test(simpleInput.getItem(0));
     }
+
     @Override
-    public ItemStack getResultItem(RegistryAccess p_267052_) {
+    public ItemStack assemble(SimpleInput simpleInput, HolderLookup.Provider provider) {
         return output.copy();
     }
-    public ItemStack getResultItem() {
-        return output.copy();
-    }
+
     @Override
     public boolean canCraftInDimensions(int p_43999_, int p_44000_) {
         return true;
     }
 
-    public NonNullList<Ingredient> getIngredient() {
-        return ingredient;
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
+        return output.copy();
     }
 
 
-
-    @Override
-    public ResourceLocation getId() {
-        return location;
+    public NonNullList<Ingredient> getIngredient() {
+        NonNullList<Ingredient> list = NonNullList.create();
+        list.addAll(ingredient);
+        return list;
     }
 
     @Override
@@ -79,7 +82,9 @@ public class OilExtractingRecipe implements Recipe<Container> {
     }
 
     public NonNullList<Ingredient> getIngredients(){
-        return ingredient;
+        NonNullList<Ingredient> list = NonNullList.create();
+        list.addAll(ingredient);
+        return list;
     }
     public static class OilExtractingRecipeType implements RecipeType<OilExtractingRecipe> {
         @Override
@@ -91,32 +96,26 @@ public class OilExtractingRecipe implements Recipe<Container> {
     public static class OilExtractingSerializer<T extends OilExtractingRecipe>implements RecipeSerializer<OilExtractingRecipe> {
 
 
-        @Override
-        public OilExtractingRecipe fromJson(ResourceLocation location, JsonObject json) {
-            ItemStack output= ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json,"result"));
-            JsonArray ingredient=GsonHelper.getAsJsonArray(json,"ingredients");
-            NonNullList<Ingredient> input=NonNullList.withSize(1,Ingredient.EMPTY);
-            for(int i=0;i<input.size();i++){
-                input.set(i,Ingredient.fromJson(ingredient.get(0)));
-            }
-            return new OilExtractingRecipe(input,output,location);
-        }
+        public static final MapCodec<OilExtractingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+                Codec.list(Ingredient.CODEC).fieldOf("ingredients").forGetter(OilExtractingRecipe::getIngredients),
+                ItemStack.CODEC.fieldOf("result").forGetter(OilExtractingRecipe::getResult)
+        ).apply(inst, OilExtractingRecipe::new));
 
-        @Nullable
+        public static final StreamCodec<RegistryFriendlyByteBuf, OilExtractingRecipe> STREAM_CODEC =
+                StreamCodec.composite(
+                        ByteBufCodecs.fromCodec(Codec.list(Ingredient.CODEC)), OilExtractingRecipe::getIngredients,
+                        ItemStack.STREAM_CODEC, OilExtractingRecipe::getResult,
+                        OilExtractingRecipe::new
+                );
+
         @Override
-        public OilExtractingRecipe fromNetwork(ResourceLocation location, FriendlyByteBuf buffer) {
-            NonNullList<Ingredient> input=NonNullList.withSize(1,Ingredient.EMPTY);
-            input.set(0,Ingredient.fromNetwork(buffer));
-            ItemStack output=buffer.readItem();
-            return new OilExtractingRecipe(input,output,location);
+        public MapCodec<OilExtractingRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, OilExtractingRecipe recipe) {
-            for (Ingredient ingredient :recipe.getIngredient()){
-                ingredient.toNetwork(buffer);
-            }
-            buffer.writeItemStack(recipe.output,false);
+        public StreamCodec<RegistryFriendlyByteBuf, OilExtractingRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }
