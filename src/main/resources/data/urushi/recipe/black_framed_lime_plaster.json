@@ -9,8 +9,8 @@
       "item": "urushi:black_urushi_wall_for_framed_blocks"
     }
   ],
-  "result": {
-    "item": "urushi:black_framed_lime_plaster",
+  "result":{
+ "id": "urushi:black_framed_lime_plaster",
     "count": 2
   }
 }

@@ -9,10 +9,10 @@
       "item": "minecraft:piston"
     },
     "S": {
-       "tag": "forge:slimeballs"
+       "tag": "c:slimeballs"
     }
   },
   "result": {
-    "item": "minecraft:sticky_piston"
+    "id": "minecraft:sticky_piston"
   }
 }

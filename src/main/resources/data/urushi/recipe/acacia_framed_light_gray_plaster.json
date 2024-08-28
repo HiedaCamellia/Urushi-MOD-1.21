@@ -9,8 +9,8 @@
       "item": "urushi:acacia_wall_for_framed_blocks"
     }
   ],
-  "result": {
-    "item": "urushi:acacia_framed_light_gray_plaster",
+  "result":{
+ "id": "urushi:acacia_framed_light_gray_plaster",
     "count": 2
   }
 }

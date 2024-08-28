@@ -50,7 +50,7 @@
 
 
 
-     "tag": "forge:string"
+     "tag": "c:string"
 
 
 
@@ -62,11 +62,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:green_tatami",
+    "id": "urushi:green_tatami",
 
 
 

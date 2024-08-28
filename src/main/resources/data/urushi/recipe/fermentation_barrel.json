@@ -16,8 +16,8 @@
     }
   },
 
-  "result": {
-    "item": "urushi:fermentation_barrel",
+  "result":{
+ "id": "urushi:fermentation_barrel",
     "count": 1
   }
 }

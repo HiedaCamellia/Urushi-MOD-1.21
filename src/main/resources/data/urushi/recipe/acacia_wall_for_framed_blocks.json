@@ -5,8 +5,8 @@
     "item": "urushi:smooth_acacia_slab"
     }
   ],
-  "result": {
-  "item": "urushi:acacia_wall_for_framed_blocks",
+  "result":{
+ "id": "urushi:acacia_wall_for_framed_blocks",
 "count": 4
   }
 }

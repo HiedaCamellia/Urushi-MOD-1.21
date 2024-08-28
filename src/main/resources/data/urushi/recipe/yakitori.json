@@ -38,7 +38,7 @@
 
 
 
-      "tag": "forge:crops/greenonion"
+      "tag": "c:crops/greenonion"
 
 
 
@@ -62,7 +62,7 @@
 
 
 
-    "tag": "forge:rods/wooden"
+    "tag": "c:rods/wooden"
 
 
 
@@ -74,11 +74,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:yakitori",
+    "id": "urushi:yakitori",
 
 
 

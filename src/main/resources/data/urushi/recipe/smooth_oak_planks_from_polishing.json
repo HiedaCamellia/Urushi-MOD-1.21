@@ -1,21 +1,1 @@
-{
-
-  "type": "urushi:polishing",
-
-  "ingredients": [
-
-  {
-
-     "item": "minecraft:oak_planks"
-
-    }
-
-  ],
-
-  "result": {
-
-  "item":"urushi:smooth_oak_planks"
-
-  }
-
-}
+{  "type": "urushi:polishing",  "ingredients": [  {     "item": "minecraft:oak_planks"    }  ],  "result": {"id":"urushi:smooth_oak_planks"  }}

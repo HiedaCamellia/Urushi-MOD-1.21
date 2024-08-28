@@ -38,7 +38,7 @@
 
 
 
-      "tag": "forge:weed"
+      "tag": "c:weed"
 
 
 
@@ -62,7 +62,7 @@
 
 
 
-    "tag": "forge:rods/wooden"
+    "tag": "c:rods/wooden"
 
 
 
@@ -74,11 +74,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:kusa_dango",
+    "id": "urushi:kusa_dango",
 
 
 

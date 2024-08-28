@@ -1,41 +1,1 @@
-{
-
-  "type": "minecraft:crafting_shapeless",
-
-  "ingredients": [
-
-    {
-
-    "item": "minecraft:wheat"
-
-    },
-
-    {
-
-    "item": "minecraft:wheat"
-
-    },
-
-    {
-
-   "item": "minecraft:wheat"
-
-    },
-
-    {
-
-     "tag": "forge:string"
-
-    }
-
-  ],
-
-  "result": {
-
-    "item": "urushi:green_tatami",
-
-    "count": 4
-
-  }
-
-}
+{  "type": "minecraft:crafting_shapeless",  "ingredients": [    {    "item": "minecraft:wheat"    },    {    "item": "minecraft:wheat"    },    {   "item": "minecraft:wheat"    },    {     "tag": "c:string"    }  ],  "result":{    "id": "urushi:green_tatami",    "count": 4  }}

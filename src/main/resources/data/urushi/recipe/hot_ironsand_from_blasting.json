@@ -1,17 +1,1 @@
-{
-
-  "type": "minecraft:blasting",
-
-  "ingredient": {
-
-    "item": "urushi:ironsand"
-
-  },
-
-  "result": "urushi:hot_ironsand",
-
-  "experience": 0.2,
-
-  "cookingtime": 100
-
-}
+{  "type": "minecraft:blasting",  "ingredient": {    "item": "urushi:ironsand"  },  "result": {"id":"urushi:hot_ironsand"},  "experience": 0.2,  "cookingtime": 100}

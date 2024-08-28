@@ -1,21 +1,1 @@
-{
-
-  "type": "urushi:polishing",
-
-  "ingredients": [
-
-  {
-
-     "item": "minecraft:cobbled_deepslate_wall"
-
-    }
-
-  ],
-
-  "result": {
-
-  "item":"minecraft:polished_deepslate_wall"
-
-  }
-
-}
+{  "type": "urushi:polishing",  "ingredients": [  {     "item": "minecraft:cobbled_deepslate_wall"    }  ],  "result": {"id":"minecraft:polished_deepslate_wall"  }}

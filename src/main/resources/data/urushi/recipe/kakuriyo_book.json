@@ -1,5 +1,12 @@
 {
-  "type": "patchouli:shapeless_book_recipe",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "patchouli"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "minecraft:book"
@@ -8,5 +15,11 @@
       "item": "minecraft:quartz"
     }
   ],
-  "book": "urushi:kakuriyo_book"
+  "result": {
+    "components": {
+      "patchouli:book": "urushi:kakuriyo_book"
+    },
+    "count": 1,
+    "id": "patchouli:guide_book"
+  }
 }

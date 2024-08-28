@@ -18,7 +18,7 @@
 
 
 
-      "tag": "forge:tofu"
+      "tag": "c:tofu"
 
 
 
@@ -30,7 +30,7 @@
 
 
 
-     "tag": "forge:crops/greenonion"
+     "tag": "c:crops/greenonion"
 
 
 
@@ -42,11 +42,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:hiyayakko",
+    "id": "urushi:hiyayakko",
 
 
 

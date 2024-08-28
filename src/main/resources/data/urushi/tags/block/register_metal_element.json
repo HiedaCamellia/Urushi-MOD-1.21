@@ -5,16 +5,16 @@
   "#minecraft:beacon_base_blocks",
   "#minecraft:rails",
   "#minecraft:sand",
-  "#forge:gravel",
+  "#c:gravels",
   "minecraft:dripstone_block",
   "minecraft:pointed_dripstone",
   "urushi:gold_leaf_block",
   "urushi:gold_leaf_slab",
   "urushi:gold_leaf_stairs",
-  "#forge:cobblestone",
-  "#forge:sand",
-  "#forge:sandstone",
-  "#forge:stone",
+  "#c:cobblestones/normal",
+  "#c:sands/colorless",
+  "#c:sandstone/blocks",
+  "#c:stones",
    "minecraft:bedrock"
   ]
 }

@@ -30,7 +30,7 @@
 
 
 
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
 
 
 
@@ -42,7 +42,7 @@
 
 
 
-     "tag": "forge:nuggets/gold"
+     "tag": "c:nuggets/gold"
 
 
 
@@ -54,11 +54,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:mirror_tier2",
+    "id": "urushi:mirror_tier2",
 
 
 

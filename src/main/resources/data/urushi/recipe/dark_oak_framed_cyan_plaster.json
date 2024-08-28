@@ -9,8 +9,8 @@
       "item": "urushi:dark_oak_wall_for_framed_blocks"
     }
   ],
-  "result": {
-    "item": "urushi:dark_oak_framed_cyan_plaster",
+  "result":{
+ "id": "urushi:dark_oak_framed_cyan_plaster",
     "count": 2
   }
 }

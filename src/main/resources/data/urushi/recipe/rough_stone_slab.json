@@ -1,29 +1,1 @@
-{
-
-  "type": "minecraft:crafting_shaped",
-
-  "pattern": [
-
-    "###"
-
-  ],
-
-  "key": {
-
-    "#": {
-
-      "item": "urushi:rough_stone"
-
-    }
-
-  },
-
-  "result": {
-
-    "item": "urushi:rough_stone_slab",
-
-    "count": 6
-
-  }
-
-}
+{  "type": "minecraft:crafting_shaped",  "pattern": [    "###"  ],  "key": {    "#": {      "item": "urushi:rough_stone"    }  },  "result":{    "id": "urushi:rough_stone_slab",    "count": 6  }}

@@ -1,31 +1,1 @@
-{
-
-  "type": "minecraft:crafting_shaped",
-
-  "pattern": [
-
-    "##",
-
-    "##"
-
-  ],
-
-  "key": {
-
-    "#": {
-
-      "item": "urushi:stripped_japanese_apricot_log"
-
-    }
-
-  },
-
-  "result": {
-
-    "item": "urushi:stripped_japanese_apricot_wood",
-
-    "count": 3
-
-  }
-
-}
+{  "type": "minecraft:crafting_shaped",  "pattern": [    "##",    "##"  ],  "key": {    "#": {      "item": "urushi:stripped_japanese_apricot_log"    }  },  "result":{    "id": "urushi:stripped_japanese_apricot_wood",    "count": 3  }}

@@ -5,8 +5,8 @@
     "item": "urushi:smooth_jungle_slab"
     }
   ],
-  "result": {
-  "item": "urushi:jungle_wall_for_framed_blocks",
+  "result":{
+ "id": "urushi:jungle_wall_for_framed_blocks",
 "count": 4
   }
 }

@@ -5,8 +5,8 @@
     "item": "urushi:smooth_dark_oak_slab"
     }
   ],
-  "result": {
-  "item": "urushi:dark_oak_wall_for_framed_blocks",
+  "result":{
+ "id": "urushi:dark_oak_wall_for_framed_blocks",
 "count": 4
   }
 }

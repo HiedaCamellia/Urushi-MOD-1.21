@@ -34,7 +34,7 @@
 
 
 
-     "tag": "forge:dyes/pink"
+     "tag": "c:dyes/pink"
 
 
 
@@ -46,7 +46,7 @@
 
 
 
-     "tag": "forge:weed"
+     "tag": "c:weed"
 
 
 
@@ -70,7 +70,7 @@
 
 
 
-    "tag": "forge:rods/wooden"
+    "tag": "c:rods/wooden"
 
 
 
@@ -82,11 +82,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:color_dango",
+    "id": "urushi:color_dango",
 
 
 

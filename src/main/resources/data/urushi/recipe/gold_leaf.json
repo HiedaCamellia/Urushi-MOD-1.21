@@ -18,7 +18,7 @@
 
 
 
-     "tag": "forge:nuggets/gold"
+     "tag": "c:nuggets/gold"
 
 
 
@@ -27,7 +27,7 @@
 
 
 
-      "tag": "forge:nuggets/gold"
+      "tag": "c:nuggets/gold"
 
 
 
@@ -39,11 +39,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:gold_leaf",
+    "id": "urushi:gold_leaf",
 
 
 

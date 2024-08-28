@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    "#forge:salt/salt"
+    "#c:salt/salt"
   ]
 }

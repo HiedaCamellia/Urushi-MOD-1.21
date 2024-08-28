@@ -1,25 +1,1 @@
-{
-
-  "type": "minecraft:crafting_shapeless",
-
-  "ingredients": [
-
-   
-
-    {
-
-      "tag": "forge:bark"
-
-    }
-
-  ],
-
-  "result": {
-
-    "item": "urushi:wood_chip",
-
-    "count": 1
-
-  }
-
-}
+{  "type": "minecraft:crafting_shapeless",  "ingredients": [       {      "tag": "c:bark"    }  ],  "result":{    "id": "urushi:wood_chip",    "count": 1  }}

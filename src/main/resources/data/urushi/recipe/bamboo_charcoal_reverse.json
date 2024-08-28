@@ -1,25 +1,1 @@
-{
-
-  "type": "minecraft:crafting_shapeless",
-
-  "ingredients": [
-
-   
-
-    {
-
-      "item": "urushi:bamboo_charcoal_block"
-
-    }
-
-  ],
-
-  "result": {
-
-    "item": "urushi:bamboo_charcoal",
-
-    "count": 9
-
-  }
-
-}
+{  "type": "minecraft:crafting_shapeless",  "ingredients": [       {      "item": "urushi:bamboo_charcoal_block"    }  ],  "result":{    "id": "urushi:bamboo_charcoal",    "count": 9  }}

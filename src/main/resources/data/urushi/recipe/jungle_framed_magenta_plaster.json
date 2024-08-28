@@ -9,8 +9,8 @@
       "item": "urushi:jungle_wall_for_framed_blocks"
     }
   ],
-  "result": {
-    "item": "urushi:jungle_framed_magenta_plaster",
+  "result":{
+ "id": "urushi:jungle_framed_magenta_plaster",
     "count": 2
   }
 }

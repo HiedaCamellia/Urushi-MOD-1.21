@@ -14,7 +14,7 @@
 
 
 
-      "tag": "forge:crops/soybean"
+      "tag": "c:crops/soybean"
 
 
 
@@ -32,7 +32,7 @@
 
 
 
-      "tag": "forge:salt"
+      "tag": "c:salt"
 
 
 
@@ -62,11 +62,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:soy_source_bamboo_cup",
+    "id": "urushi:soy_source_bamboo_cup",
 
 
 

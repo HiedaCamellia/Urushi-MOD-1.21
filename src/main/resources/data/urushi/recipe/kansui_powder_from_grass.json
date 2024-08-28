@@ -10,7 +10,7 @@
 
 
 
-   "tag": "forge:weed"
+   "tag": "c:weed"
 
 
 
@@ -18,7 +18,9 @@
 
 
 
-  "result": "urushi:kansui_powder",
+  "result": {
+"id":"urushi:kansui_powder"
+},
 
 
 

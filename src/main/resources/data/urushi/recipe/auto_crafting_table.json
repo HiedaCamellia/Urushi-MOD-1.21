@@ -34,7 +34,7 @@
 
 
 
-     "tag": "forge:ingots/gold"
+     "tag": "c:ingots/gold"
 
 
 
@@ -75,11 +75,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:auto_crafting_table",
+    "id": "urushi:auto_crafting_table",
 
 
 

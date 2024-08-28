@@ -30,7 +30,7 @@
 
 
 
-     "tag": "forge:weed"
+     "tag": "c:weed"
 
 
 
@@ -42,7 +42,7 @@
 
 
 
-     "tag": "forge:crops/adzuki"
+     "tag": "c:crops/adzuki"
 
 
 
@@ -54,11 +54,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:kusa_mochi",
+    "id": "urushi:kusa_mochi",
 
 
 

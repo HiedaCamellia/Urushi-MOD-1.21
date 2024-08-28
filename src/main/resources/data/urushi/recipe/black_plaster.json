@@ -1,39 +1,1 @@
-{
-
-  "type": "minecraft:crafting_shaped",
-
-  "pattern": [
-
-    "BBB",
-
-    "BDB",
-
-    "BBB"
-
-  ],
-
-  "key": {
-
-    "D": {
-
-   "tag": "forge:dyes/black"
-
-      },
-
-    "B": {
-
-    "tag": "urushi:plaster"
-
-   }
-
-  },
-
-  "result": {
-
-    "item": "urushi:black_plaster",
-
-    "count": 8
-
-  }
-
-}
+{  "type": "minecraft:crafting_shaped",  "pattern": [    "BBB",    "BDB",    "BBB"  ],  "key": {    "D": {   "tag": "c:dyes/black"      },    "B": {    "tag": "urushi:plaster"   }  },  "result":{    "id": "urushi:black_plaster",    "count": 8  }}

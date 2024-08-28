@@ -26,7 +26,7 @@
 
 
 
-  "tag": "forge:ingots/iron"
+  "tag": "c:ingots/iron"
 
 
 
@@ -60,7 +60,7 @@
 
 
 
-  "item":"minecraft:trident"
+"id":"minecraft:trident"
 
 
 

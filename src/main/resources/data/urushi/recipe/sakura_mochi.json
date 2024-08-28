@@ -42,7 +42,7 @@
 
 
 
-      "tag": "forge:crops/adzuki"
+      "tag": "c:crops/adzuki"
 
 
 
@@ -54,11 +54,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:sakura_mochi",
+    "id": "urushi:sakura_mochi",
 
 
 

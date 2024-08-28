@@ -1,21 +1,1 @@
-{
-
-  "type": "urushi:polishing",
-
-  "ingredients": [
-
-  {
-
-     "item": "minecraft:acacia_slab"
-
-    }
-
-  ],
-
-  "result": {
-
-  "item":"urushi:smooth_acacia_slab"
-
-  }
-
-}
+{  "type": "urushi:polishing",  "ingredients": [  {     "item": "minecraft:acacia_slab"    }  ],  "result": {"id":"urushi:smooth_acacia_slab"  }}

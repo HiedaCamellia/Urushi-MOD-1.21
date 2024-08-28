@@ -1,31 +1,1 @@
-{
-
-  "type": "minecraft:crafting_shapeless",
-
-  "ingredients": [
-
-   
-
-    {
-
-      "item": "minecraft:lime_wool"
-
-    },
-
-    {
-
-      "tag": "forge:string"
-
-    }
-
-  ],
-
-  "result": {
-
-    "item": "urushi:lime_cushion",
-
-    "count": 4
-
-  }
-
-}
+{  "type": "minecraft:crafting_shapeless",  "ingredients": [       {      "item": "minecraft:lime_wool"    },    {      "tag": "c:string"    }  ],  "result":{    "id": "urushi:lime_cushion",    "count": 4  }}

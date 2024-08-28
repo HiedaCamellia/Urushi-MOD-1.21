@@ -1,31 +1,1 @@
-{
-
-  "type": "minecraft:crafting_shaped",
-
-  "pattern": [
-
-    " ##",
-
-    "## "
-
-  ],
-
-  "key": {
-
-    "#": {
-
-      "item": "minecraft:clay_ball"
-
-    }
-
-  },
-
-  "result": {
-
-    "item": "urushi:raw_ibushi_kawara",
-
-    "count": 64
-
-  }
-
-}
+{  "type": "minecraft:crafting_shaped",  "pattern": [    " ##",    "## "  ],  "key": {    "#": {      "item": "minecraft:clay_ball"    }  },  "result":{    "id": "urushi:raw_ibushi_kawara",    "count": 64  }}

@@ -42,7 +42,7 @@
 
 
 
-      "tag": "forge:crops/adzuki"
+      "tag": "c:crops/adzuki"
 
 
 
@@ -54,7 +54,7 @@
 
 
 
-      "tag": "forge:crops/adzuki"
+      "tag": "c:crops/adzuki"
 
 
 
@@ -66,11 +66,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:yokan",
+    "id": "urushi:yokan",
 
 
 

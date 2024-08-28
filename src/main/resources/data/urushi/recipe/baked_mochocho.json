@@ -54,7 +54,7 @@
 
 
 
-      "tag": "forge:crops/redbean"
+      "tag": "c:crops/redbean"
 
 
 
@@ -66,11 +66,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:baked_mochocho",
+    "id": "urushi:baked_mochocho",
 
 
 

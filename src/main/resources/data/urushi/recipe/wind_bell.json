@@ -1,45 +1,1 @@
-{
-
-  "type": "minecraft:crafting_shaped",
-
-  "pattern": [
-
-    "g",
-
-    "s",
-
-    "p"
-
-  ],
-
-  "key": {
-
-    "p": {
-
-    "item": "minecraft:paper"
-
-    },
-
-    "s": {
-
-   "tag": "forge:string"
-
-    },
-
-    "g": {
-
-"tag": "forge:glass"
-
-    }
-
-  },
-
-  "result": {
-
-    "item": "urushi:wind_bell",
-
-    "count": 1
-
-  }
-
-}
+{  "type": "minecraft:crafting_shaped",  "pattern": [    "g",    "s",    "p"  ],  "key": {    "p": {    "item": "minecraft:paper"    },    "s": {   "tag": "c:string"    },    "g": {"tag": "c:glass"    }  },  "result":{    "id": "urushi:wind_bell",    "count": 1  }}

@@ -38,7 +38,7 @@
 
 
 
-      "tag": "forge:glass"
+      "tag": "c:glass"
 
 
 
@@ -50,11 +50,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:goldfish_bowl",
+    "id": "urushi:goldfish_bowl",
 
 
 

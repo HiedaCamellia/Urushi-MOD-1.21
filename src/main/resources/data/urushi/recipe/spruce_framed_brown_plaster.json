@@ -9,8 +9,8 @@
       "item": "urushi:spruce_wall_for_framed_blocks"
     }
   ],
-  "result": {
-    "item": "urushi:spruce_framed_brown_plaster",
+  "result":{
+ "id": "urushi:spruce_framed_brown_plaster",
     "count": 2
   }
 }

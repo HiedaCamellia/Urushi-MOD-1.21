@@ -9,8 +9,8 @@
       "item": "urushi:birch_wall_for_framed_blocks"
     }
   ],
-  "result": {
-    "item": "urushi:birch_framed_light_blue_plaster",
+  "result":{
+ "id": "urushi:birch_framed_light_blue_plaster",
     "count": 2
   }
 }

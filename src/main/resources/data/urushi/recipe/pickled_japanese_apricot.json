@@ -29,7 +29,7 @@
     {
 
 
-"tag": "forge:salt"
+"tag": "c:salt"
 
 
 
@@ -41,11 +41,11 @@
 
 
 
-  "result": {
+  "result":{
 
 
 
-    "item": "urushi:pickled_japanese_apricot",
+    "id": "urushi:pickled_japanese_apricot",
 
 
 

@@ -38,7 +38,7 @@
 
 
 
-    "tag": "forge:nuggets/gold"
+    "tag": "c:nuggets/gold"
 
 
 
@@ -66,7 +66,7 @@
 
 
 
-  "item":"urushi:fire_element_magatama"
+"id":"urushi:fire_element_magatama"
 
 
 

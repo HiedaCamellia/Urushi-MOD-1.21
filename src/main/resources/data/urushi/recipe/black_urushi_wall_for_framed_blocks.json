@@ -5,8 +5,8 @@
     "item": "urushi:smooth_black_urushi_slab"
     }
   ],
-  "result": {
-  "item": "urushi:black_urushi_wall_for_framed_blocks",
+  "result":{
+ "id": "urushi:black_urushi_wall_for_framed_blocks",
 "count": 4
   }
 }
