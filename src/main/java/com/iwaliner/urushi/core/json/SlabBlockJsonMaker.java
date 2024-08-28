@@ -223,8 +223,8 @@ public class SlabBlockJsonMaker {
         }
 
 
-        // data/urushi/loot_tables/block/フォルダに生成する
-        File dir5 = new File(ModCoreUrushi.dataDirectory, "urushi/loot_tables/blocks/");
+        // data/urushi/loot_table/block/フォルダに生成する
+        File dir5 = new File(ModCoreUrushi.dataDirectory, "urushi/loot_table/block/");
         if (dir5 != null ) {
             slabNameString=slabName;
             SlabBlockLootTable model = INSTANCE.new SlabBlockLootTable();
@@ -460,8 +460,8 @@ public class SlabBlockJsonMaker {
         }
 
 
-        // data/urushi/loot_tables/block/フォルダに生成する
-        File dir9 = new File(ModCoreUrushi.dataInBuildDirectory, "urushi/loot_tables/blocks/");
+        // data/urushi/loot_table/block/フォルダに生成する
+        File dir9 = new File(ModCoreUrushi.dataInBuildDirectory, "urushi/loot_table/block/");
         if (dir9 != null ) {
             slabNameString=slabName;
             SlabBlockLootTable model = INSTANCE.new SlabBlockLootTable();

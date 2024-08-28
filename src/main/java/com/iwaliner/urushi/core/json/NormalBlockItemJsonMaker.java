@@ -124,8 +124,8 @@ public class NormalBlockItemJsonMaker {
 
 
 
-        // data/urushi/loot_tables/block/フォルダに生成する
-        File dir3 = new File(ModCoreUrushi.dataDirectory, "urushi/loot_tables/blocks/");
+        // data/urushi/loot_table/block/フォルダに生成する
+        File dir3 = new File(ModCoreUrushi.dataDirectory, "urushi/loot_table/block/");
         if (dir3 != null ) {
             itemName=fileName;
             BlockLootTable model = INSTANCE.new BlockLootTable();
@@ -167,8 +167,8 @@ public class NormalBlockItemJsonMaker {
         }
 
 
-        // data/urushi/loot_tables/block/フォルダに生成する
-        File dir4 = new File(ModCoreUrushi.dataInBuildDirectory, "urushi/loot_tables/blocks/");
+        // data/urushi/loot_table/block/フォルダに生成する
+        File dir4 = new File(ModCoreUrushi.dataInBuildDirectory, "urushi/loot_table/block/");
         if (dir4 != null ) {
             itemName=fileName;
             BlockLootTable model = INSTANCE.new BlockLootTable();

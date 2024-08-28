@@ -223,7 +223,7 @@ return false;
         if (getReiryokuCapacity(stack) <= 0) {
             return 0;
         }
-        CompoundTag compoundtag = stack.get(DataComponents.CUSTOM_DATA).copyTag();
+        CompoundTag compoundtag = stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.of(new CompoundTag())).copyTag();
         return compoundtag.getInt(REIRYOKU_AMOUNT);
 
     }
@@ -233,7 +233,7 @@ return false;
      **/
     public static void setStoredReiryokuAmount(ItemStack stack, int i) {
         if (0 <= i && i <= getReiryokuCapacity(stack)) {
-            CompoundTag compoundtag = stack.get(DataComponents.CUSTOM_DATA).copyTag();
+            CompoundTag compoundtag = stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.of(new CompoundTag())).copyTag();
             compoundtag.putInt(REIRYOKU_AMOUNT, i);
             stack.set(DataComponents.CUSTOM_DATA, CustomData.of(compoundtag));
         }
@@ -243,7 +243,7 @@ return false;
      * 霊力を増減させるが、結果が0以下や最大容量以上になる場合を考慮していない。
      **/
     public static void increaseStoredReiryokuAmount(ItemStack stack, int i) {
-        CompoundTag compoundtag = stack.get(DataComponents.CUSTOM_DATA).copyTag();
+        CompoundTag compoundtag = stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
         int pre = 0;
         pre = compoundtag.getInt(REIRYOKU_AMOUNT);
         if (0 <= pre + i && pre + i <= getReiryokuCapacity(stack)) {
@@ -260,7 +260,7 @@ return false;
      * 霊力を増減させたとき、計算結果が定義域に含まれているかどうか
      **/
     public static boolean willBeInDomain(ItemStack stack, int i) {
-        CompoundTag compoundtag = stack.get(DataComponents.CUSTOM_DATA).copyTag();
+        CompoundTag compoundtag = stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
         int pre = 0;
         pre = compoundtag.getInt(REIRYOKU_AMOUNT);
         return 0 <= pre + i && pre + i <= getReiryokuCapacity(stack);
@@ -270,7 +270,7 @@ return false;
      * 霊力を増減させたとき、定義域からはみ出た端数を返す
      **/
     public static int getExtraReiryokuAmount(ItemStack stack, int i) {
-        CompoundTag compoundtag = stack.get(DataComponents.CUSTOM_DATA).copyTag();
+        CompoundTag compoundtag = stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
         int pre = 0;
         pre = compoundtag.getInt(REIRYOKU_AMOUNT);
 

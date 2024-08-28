@@ -34,7 +34,7 @@ public final class ConfigUrushi {
         shichirincookingDifficlutly=builder.comment("cooking difficulty by using Shichirin (small number : severe)").define("Shichirin cooking difficulty(1～2147483647)",2000);
         builder.pop();
         builder.push("entity settings");
-        TurnOnSpeedUp=builder.comment("increase the player walking spped by 16% so that you can place blocks comfortably").define("walking speed(true/false)",true);
+        TurnOnSpeedUp=builder.comment("increase the player walking spped by 16% so that you can place block comfortably").define("walking speed(true/false)",true);
         builder.pop();
         builder.push("particle settings");
         fallingLeafParticleAmount=builder.comment("amount of falling leaf particles").define("falling leaf(1～100)",50);

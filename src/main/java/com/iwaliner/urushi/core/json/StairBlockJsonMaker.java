@@ -486,8 +486,8 @@ public class StairBlockJsonMaker {
         }
 
 
-        // data/urushi/loot_tables/block/フォルダに生成する
-        File dir2 = new File(ModCoreUrushi.dataDirectory, "urushi/loot_tables/blocks/");
+        // data/urushi/loot_table/block/フォルダに生成する
+        File dir2 = new File(ModCoreUrushi.dataDirectory, "urushi/loot_table/block/");
         if (dir2 != null ) {
             stairsNameString=baseStairsName+"_stairs";
             StairsBlockLootTable model = INSTANCE.new StairsBlockLootTable();
@@ -988,8 +988,8 @@ public class StairBlockJsonMaker {
         }
 
 
-        // data/urushi/loot_tables/block/フォルダに生成する
-        File dir8 = new File(ModCoreUrushi.dataInBuildDirectory, "urushi/loot_tables/blocks/");
+        // data/urushi/loot_table/block/フォルダに生成する
+        File dir8 = new File(ModCoreUrushi.dataInBuildDirectory, "urushi/loot_table/block/");
         if (dir8 != null ) {
             stairsNameString=baseStairsName+"_stairs";
             StairsBlockLootTable model = INSTANCE.new StairsBlockLootTable();

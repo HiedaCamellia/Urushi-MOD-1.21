@@ -39,7 +39,7 @@ public class RequiredToolMaterialTagGenerator {
             return;
 
         // 指定フォルダ内に生成する
-        File dir = new File(ModCoreUrushi.dataDirectory, "minecraft/tags/blocks/");
+        File dir = new File(ModCoreUrushi.dataDirectory, "minecraft/tags/block/");
 
         Mineable model = INSTANCE.new Mineable(list);
             File f = new File(dir + "/" + fileName + ".json");
@@ -78,7 +78,7 @@ public class RequiredToolMaterialTagGenerator {
 
 
         // 指定フォルダ内に生成する
-        File dir2 = new File(ModCoreUrushi.dataInBuildDirectory, "minecraft/tags/blocks/");
+        File dir2 = new File(ModCoreUrushi.dataInBuildDirectory, "minecraft/tags/block/");
 
         Mineable model2 = INSTANCE.new Mineable(list);
         File f2 = new File(dir2 + "/" + fileName + ".json");
@@ -122,7 +122,7 @@ public class RequiredToolMaterialTagGenerator {
             return;
 
         // 指定フォルダ内に生成する
-        File dir = new File(ModCoreUrushi.dataDirectory, "forge/tags/blocks/");
+        File dir = new File(ModCoreUrushi.dataDirectory, "forge/tags/block/");
 
         Mineable model = INSTANCE.new Mineable(list);
         File f = new File(dir + "/" + fileName + ".json");
@@ -161,7 +161,7 @@ public class RequiredToolMaterialTagGenerator {
 
 
         // 指定フォルダ内に生成する
-        File dir2 = new File(ModCoreUrushi.dataInBuildDirectory, "forge/tags/blocks/");
+        File dir2 = new File(ModCoreUrushi.dataInBuildDirectory, "forge/tags/block/");
 
         Mineable model2 = INSTANCE.new Mineable(list);
         File f2 = new File(dir2 + "/" + fileName + ".json");

@@ -34,7 +34,7 @@ public class MineableTagGenerator {
             return;
 
         // 指定フォルダ内に生成する
-        File dir = new File(ModCoreUrushi.dataDirectory, "minecraft/tags/blocks/mineable/");
+        File dir = new File(ModCoreUrushi.dataDirectory, "minecraft/tags/block/mineable/");
 
         Mineable model = INSTANCE.new Mineable(list);
             File f = new File(dir + "/" + fileName + ".json");
@@ -73,7 +73,7 @@ public class MineableTagGenerator {
 
 
         // 指定フォルダ内に生成する
-        File dir2 = new File(ModCoreUrushi.dataInBuildDirectory, "minecraft/tags/blocks/mineable/");
+        File dir2 = new File(ModCoreUrushi.dataInBuildDirectory, "minecraft/tags/block/mineable/");
 
         Mineable model2 = INSTANCE.new Mineable(list);
         File f2 = new File(dir2 + "/" + fileName + ".json");

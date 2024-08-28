@@ -1,5 +1,5 @@
 {
-    "parent": "block/orientable",
+    "parent": "minecraft:block/orientable",
     "textures": {
         "top": "urushi:block/urushi_log_top",
         "front": "urushi:block/urushi_log_damaged_filled",

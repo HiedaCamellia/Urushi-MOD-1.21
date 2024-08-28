@@ -260,8 +260,8 @@ public  class HokoraBlockEntity extends AbstractReiryokuStorableBlockEntity impl
             return SLOTS_FOR_UP;
 
     }
-//    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.items.IItemHandler>[] handlers =
-//            net.minecraftforge.items.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+//    net.minecraftforge.common.util.LazyOptional<? extends net.minecraftforge.item.IItemHandler>[] handlers =
+//            net.minecraftforge.item.wrapper.SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
 //    @Override
 //    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @Nullable Direction facing) {
 //        if (!this.remove && facing != null && capability == net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER) {

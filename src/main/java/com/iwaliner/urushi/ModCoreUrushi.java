@@ -36,6 +36,7 @@ import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -611,7 +612,7 @@ public class ModCoreUrushi {
         }
 
         if(stack.get(DataComponents.CUSTOM_DATA)!=null){
-            CompoundTag tag=stack.get(DataComponents.CUSTOM_DATA).copyTag();
+            CompoundTag tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
             if(tag.contains("cookingEnum")){
                 int i=tag.getInt("cookingEnum");
                 int level=ShichirinBlockEntity.getCookingLevel(i);
@@ -662,8 +663,8 @@ public class ModCoreUrushi {
     public void FoodEatEvent(LivingEntityUseItemEvent.Finish event) {
         LivingEntity livingEntity=event.getEntity();
         ItemStack stack=event.getResultStack();
-        CompoundTag tag=stack.get(DataComponents.CUSTOM_DATA).copyTag();
-        if(tag==null || !tag.contains("cookingEnum")){
+        CompoundTag tag=stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        if(!tag.contains("cookingEnum")){
             return;
         }
 

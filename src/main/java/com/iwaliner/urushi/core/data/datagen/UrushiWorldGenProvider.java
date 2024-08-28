@@ -15,8 +15,7 @@ import java.util.concurrent.CompletableFuture;
 public class UrushiWorldGenProvider  extends DatapackBuiltinEntriesProvider {
     public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
             .add(Registries.CONFIGURED_FEATURE, ConfiguredFeatureRegister::bootstrap)
-            .add(Registries.PLACED_FEATURE, PlacedFeatureRegister::bootstrap)
-           ;
+            .add(Registries.PLACED_FEATURE, PlacedFeatureRegister::bootstrap);
 
     public UrushiWorldGenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(ModCoreUrushi.ModID));

@@ -1,5 +1,5 @@
 {
-    "parent": "block/orientable",
+    "parent": "minecraft:block/orientable",
     "textures": {
         "top": "urushi:block/tansu_stained_top_green",
         "front": "urushi:block/tansu_stained_front_green",

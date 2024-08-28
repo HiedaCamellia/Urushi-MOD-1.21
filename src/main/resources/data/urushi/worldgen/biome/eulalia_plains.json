@@ -25,7 +25,7 @@
 
     "music": {
 
-      "sound": "minecraft:music.cat",
+      "sound": "minecraft:music_disc.cat",
 
       "min_delay": 12000,
 
